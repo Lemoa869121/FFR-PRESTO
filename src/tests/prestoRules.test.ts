@@ -69,7 +69,7 @@ describe('derived Presto rules reproduce the forsterpro file', () => {
 });
 
 describe('individual rules', () => {
-  const int003: PrestoConfig = { openingSide: 'interieur', leafCount: 1, din: 'L', totalWidth: 2036.5, totalHeight: 2170, leftSideWidth: 0, rightSideWidth: 963.5, transomHeight: 0 };
+  const int003: PrestoConfig = { openingSide: 'interieur', leafCount: 1, din: 'L', totalWidth: 2036.5, totalHeight: 2170, leftSideWidth: 0, rightSideWidth: 963.5, transomHeight: 0, floorGap: 10 };
 
   it('P-VAN-01: leaf size from the door frame (simple and double)', () => {
     expect(generatePrestoBom(int003).geometry).toEqual({ doorFrameWidth: 1073, doorZoneHeight: 2170, leafWidth: 993, leafHeight: 2120 });
