@@ -43,7 +43,17 @@ export function QuoteSummary({ values }: { values: QuoteFormValues }) {
           <h2 id="sum-compo">Composition et dimensions</h2>
           <dl className="kv">
             <dt>Composition</dt><dd>{compositionLabel(values)}</dd>
-            {fields.map((f) => (<FragmentRow key={f} label={DIMENSION_LABELS[f]} value={formatMm(values.dimensions[f])} />))}
+            {fields.filter((f) => f !== 'mainLeafWidth' && f !== 'secondaryLeafWidth').map((f) => (<FragmentRow key={f} label={DIMENSION_LABELS[f]} value={formatMm(values.dimensions[f])} />))}
+            {'geometry' in result && result.geometry && (
+              <>
+                <dt>Passage dormant (calculé)</dt><dd>{formatMm(result.geometry.doorFrameWidthMm)} × {formatMm(result.geometry.doorZoneHeightMm)}</dd>
+                <dt>Vantail{result.geometry.leafCount === 2 ? 's (chacun)' : ''} (calculé)</dt><dd>{formatMm(result.geometry.leafWidthMm)} × {formatMm(result.geometry.leafHeightMm)}</dd>
+              </>
+            )}
+            <dt>Position de référence</dt>
+            <dd>{'referencePositionId' in result && result.referencePositionId
+              ? <span className="tag tag--ok">{result.referencePositionId} (dossier FFR Presto)</span>
+              : <span className="tag tag--warn">Aucune — résultat extrapolé</span>}</dd>
           </dl>
         </section>
         <section className="card" aria-labelledby="sum-opt">
@@ -73,7 +83,7 @@ export function QuoteSummary({ values }: { values: QuoteFormValues }) {
           </section>
           <section className="card" aria-labelledby="sum-cut">
             <h2 id="sum-cut">Liste de débit</h2>
-            <CuttingListTable items={result.cuttingList} />
+            <CuttingListTable items={result.cuttingList} caption="Liste de débit matière — quantités pour 1 composition" />
           </section>
           <section className="card" aria-labelledby="sum-tot">
             <h2 id="sum-tot">Détail du chiffrage</h2>

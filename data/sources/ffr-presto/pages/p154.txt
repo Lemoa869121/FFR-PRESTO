@@ -1,0 +1,55 @@
+  Débit optimisé                                                   Date:
+                                                                   Affaire:
+                                                                                              11/11/2026 / 14:25
+                                                                                              FFR Presto
+
+Quantité Orientation                Débit          Longueur               Coupe              Position / Lot
+
+ 1x
+
+   1        H / 17                  993,0               993,0          135° / 135°           Int 012
+   1        G / 19                2.120,0             2.120,0          135° / 135°           Int 012
+   1        G / 12                2.120,0             2.120,0          135° / 135°           Int 011
+
+ 1x
+
+   1        H / 21                  993,0               993,0          135° / 135°           Int 012
+   1        G / 15                2.120,0             2.120,0          135° / 135°           Int 012
+   1        D / 18                2.120,0             2.120,0          135° / 135°           Int 012
+
+ 1x
+
+   1        G / 13                2.120,0             2.120,0          135° / 135°           Ext 008
+   1        G / 10                2.120,0             2.120,0          135° / 135°           Ext 007
+
+ 1x
+
+   1        D/8                   2.120,0             2.120,0          135° / 135°           Ext 009b
+   1        G / 13                2.120,0             2.120,0          135° / 135°           Ext 009
+
+ 1x
+
+   1        D / 11                2.120,0             2.120,0          135° / 135°           Ext 010b
+   1        G / 16                2.120,0             2.120,0          135° / 135°           Ext 010
+
+ 1x
+
+   1        G / 19                2.120,0             2.120,0          135° / 135°           Ext 012
+   1        G / 16                2.120,0             2.120,0          135° / 135°           Ext 011
+
+ 1x
+
+   1       La / 10                2.076,0             2.076,0            45° / 45°           Ext 010
+   1       La / 7                 2.076,0             2.076,0            45° / 45°           Ext 008
+
+ 1x
+
+   1       La / 12                2.076,0             2.076,0            45° / 45°           Ext 012
+   1       La / 9                 2.076,0             2.076,0            45° / 45°           Ext 010b
+
+
+
+
+                     forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                           Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto         Page: 12
+

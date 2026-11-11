@@ -1,0 +1,49 @@
+  Bon d'atelier                                                    Date:
+                                                                   Affaire:
+                                                                                              11/11/2026 / 14:25
+                                                                                              FFR Presto
+
+
+NOTA : il vous appartient de vérifier les plans et les annotations de cette étude réalisée selon
+les informations reçues avant l'utilisation du bon d'atelier et du débit optimisé.
+
+La société Forster décline toute responsabilité en cas d'erreur de débit.
+
+                                                                 Répertoire:                 FFR\
+
+
+
+
+Position: Int 006
+Quantité: 1 Pce                                                  Echelle: 1: 42 / Vue extérieure
+Série: forster presto/presto XS 50 Standard Aluminium
+Joint - extérieur 2mm                                            Poids position (sans accessoires): 88,18 (88,18) kg
+                                                                 (0,00 kg Remplissages / 88,18 kg Profilés)
+Taille: 3.000 x 2.500 mm
+Drainage: visible
+Matériau:                            Acier brut
+
+La coupe système de la position "Int 006" n'existe pas. Veuillez recalculer la nomenclature.
+Dormant
+Profilés
+Croquis  Quantité Numéro                   Description                            Longueur [mm]  Coupe     Orientation / N° courant
+         1 (1) Pce 32.851                  Forster PRESTO                              2.500,0 135° - 135°         D/1
+
+           1 (1) Pce 32.851                Forster PRESTO                                2.500,0 135° - 135°            G/2
+
+           1 (1) Pce 32.851                Forster PRESTO                                  963,5     135° - 90°         B/3
+
+           1 (1) Pce 32.851                Forster PRESTO                                  963,5     90° - 135°         B/5
+
+           1 (1) Pce 32.851                Forster PRESTO                                3.000,0 135° - 135°            H/6
+
+           1 (1) Pce 32.803                Forster PRESTO                                2.190,0     90° - 135°        Ha / 7
+
+           1 (1) Pce 32.852                Forster PRESTO                                  280,0      90° - 90°        Ha / 8
+
+
+
+
+                     forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                           Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto           Page: 30
+

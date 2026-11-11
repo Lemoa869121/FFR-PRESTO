@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "extract:ffr": "tsx scripts/extract-forsterpro.ts",
+    "smoke": "node scripts/smoke-test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -31,6 +33,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "playwright": "^1.55.0",
+    "tsx": "^4.20.5",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.43.0",
     "vite": "^7.1.5",

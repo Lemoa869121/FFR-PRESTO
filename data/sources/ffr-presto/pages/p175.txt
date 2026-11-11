@@ -1,0 +1,24 @@
+  Débit optimisé                                           Date:
+                                                           Affaire:
+                                                                                      11/11/2026 / 14:25
+                                                                                      FFR Presto
+
+
+Récapitulatif
+forster
+Numéro    Description                             Trait. surface        Quantité Longueur             Chutes   %
+                                                  Int./Ext.                         [mm]               [mm]
+32.800    Forster PRESTO                                                     20     6.000             25.688     21,4
+32.803    Forster PRESTO                                                     34     6.000             30.612     15,0
+32.805    Forster PRESTO                                                     34     6.000             30.612     15,0
+32.851    Forster PRESTO                                                     26     6.000              4.872      3,1
+32.852    Forster PRESTO                                                       3    6.000              2.760     15,3
+32.855    Forster PRESTO                                                     10     6.000             12.336     20,6
+901335    Parclose aluminium                                                 89     6.000              9.538      1,8
+
+
+
+
+             forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                   Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto         Page: 33
+

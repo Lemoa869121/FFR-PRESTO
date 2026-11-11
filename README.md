@@ -2,7 +2,9 @@
 
 **Chiffrage automatique de portes et châssis Forster** — application interne, côté client, qui automatise le chiffrage **matériel** des portes et châssis fixes Forster Presto.
 
-> ⚠️ **Statut des données** : aucun prix réel n’est intégré. Les listes d’options marquées « Donnée de démonstration » ou « Valeur provisoire » sont fictives. Les règles de débit sont décrites et sourcées dans [`docs/calculation-rules.md`](docs/calculation-rules.md).
+> ⚠️ **Statut des données** : aucun prix réel n’est intégré. Les règles de débit Presto sont **dérivées** du dossier de fabrication forsterpro « FFR Presto » et vérifiées sur ses 32 positions ([`docs/calculation-rules.md`](docs/calculation-rules.md)). Les listes d’options marquées « Donnée de démonstration » sont fictives et ne sont pas utilisées par le calcul.
+
+L’interface suit la **charte graphique Forster**, identique à celle de SERRURE_STD : couleurs, police Faktum, logo officiel ([`docs/charte-graphique.md`](docs/charte-graphique.md)).
 
 ## Objectif
 
@@ -45,6 +47,7 @@ L’application est ensuite accessible sur l’adresse affichée par Vite (par d
 | `npm run lint` | ESLint |
 | `npm run typecheck` | Vérification TypeScript seule |
 | `npm test` | Tests unitaires (Vitest) |
+| `npm run extract:ffr` | Régénère les données importées du dossier forsterpro depuis `data/sources/ffr-presto/pages` |
 
 ## Structure du projet
 
@@ -55,16 +58,18 @@ src/
   features/     Blocs fonctionnels (récapitulatif du chiffrage)
   components/   Composants d’affichage réutilisables (schéma SVG, tableaux, alertes)
   domain/       Compositions, géométrie du schéma, fabrique de chiffrages
-  calculation/  Moteur de calcul (aucune règle dans les composants React)
+  calculation/  Moteur de calcul ; presto/ = règles Forster Presto (aucune règle dans les composants React)
   pricing/      Sources de prix (vide : aucun prix fourni)
-  imports/      Lecture de fichiers (aperçu Excel / CSV via SheetJS)
+  imports/      Lecture de fichiers : aperçu Excel / CSV (SheetJS), parseur forsterpro
   storage/      Persistance locale (localStorage)
   validation/   Schémas Zod et limites dimensionnelles configurables
   types/        Types TypeScript du domaine
   utils/        Formatage français (mm, m, €, dates)
-  data/         Données provisoires clairement identifiées
+  data/         Données importées (sources/ffr-presto) et listes provisoires identifiées
   tests/        Tests unitaires
-docs/           Architecture, modèle de données, règles de calcul, import, feuille de route, décisions
+docs/           Architecture, modèle de données, règles de calcul, import, analyse du dossier, feuille de route, décisions
+data/sources/   Fichiers sources versionnés tels quels (PDF forsterpro + extraction texte)
+scripts/        Outils de développement (extraction forsterpro)
 ```
 
 ## Déploiement
@@ -80,7 +85,11 @@ Le chemin de base est `/FFR-PRESTO/` sur GitHub Actions et `/` en local ; la var
 | Prix | **Aucun** : affichage « Prix non disponible » |
 | Listes d’options (système, vitrage, finition…) | **Donnée de démonstration** |
 | Limites dimensionnelles | **Règle métier à fournir** : contrôle désactivé |
-| Règles de débit | Voir [`docs/calculation-rules.md`](docs/calculation-rules.md) |
+| Système | Forster Presto — presto XS 50 Standard Aluminium (source : dossier FFR Presto) |
+| Références produits | 23 références lues dans le dossier, avec page et ligne |
+| Règles de débit | 30 règles dérivées des 32 positions ; 3 « à valider » ([`docs/calculation-rules.md`](docs/calculation-rules.md)) |
+| Hors dimensions du dossier | Calcul extrapolé, signalé « à valider » |
+| Châssis fixe seul, composition personnalisée | **Règle métier à fournir** |
 
 ## Procédure pour fournir la liste de débit
 

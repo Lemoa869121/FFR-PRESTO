@@ -6,7 +6,8 @@ export type Route =
   | { name: 'new' }
   | { name: 'edit'; id: string }
   | { name: 'cutting'; id?: string }
-  | { name: 'import' };
+  | { name: 'import' }
+  | { name: 'rules' };
 
 export function parseHash(hash: string): Route {
   const path = hash.replace(/^#/, '');
@@ -15,6 +16,7 @@ export function parseHash(hash: string): Route {
   if (parts[0] === 'chiffrage' && parts[1]) return { name: 'edit', id: decodeURIComponent(parts[1]) };
   if (parts[0] === 'debit') return parts[1] ? { name: 'cutting', id: decodeURIComponent(parts[1]) } : { name: 'cutting' };
   if (parts[0] === 'import') return { name: 'import' };
+  if (parts[0] === 'regles') return { name: 'rules' };
   return { name: 'dashboard' };
 }
 
@@ -25,6 +27,7 @@ export function routeToHash(route: Route): string {
     case 'edit': return `#/chiffrage/${encodeURIComponent(route.id)}`;
     case 'cutting': return route.id ? `#/debit/${encodeURIComponent(route.id)}` : '#/debit';
     case 'import': return '#/import';
+    case 'rules': return '#/regles';
   }
 }
 

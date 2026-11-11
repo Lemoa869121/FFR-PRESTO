@@ -1,9 +1,10 @@
 import { useMemo, useState, type InputHTMLAttributes, type Ref } from 'react';
 import { Controller, useForm, useWatch, type FieldPath } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Quote } from '../types';
+import type { CompositionType, LeafCount, Quote } from '../types';
 import { quoteFormSchema, type QuoteFormValues } from '../validation/quoteSchema';
-import { COMPOSITIONS, DIMENSION_LABELS, getComposition, visibleDimensionFields } from '../domain/compositions';
+import { COMPOSITIONS, DERIVED_DIMENSION_FIELDS, DIMENSION_LABELS, getComposition, visibleDimensionFields, type DimensionField } from '../domain/compositions';
+import { REFERENCE_PRESETS, referenceDefault } from '../domain/referencePresets';
 import { formFromQuote, quoteFromForm } from '../domain/quoteFactory';
 import { QuoteRepository, StorageError } from '../storage/quoteStorage';
 import { DEFAULT_OPTIONS, OPTION_LISTS } from '../data/provisionalOptions';
@@ -54,6 +55,13 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
   const values = useWatch({ control }) as QuoteFormValues;
   const compositionDef = getComposition(values.composition.type);
   const dimensionFields = visibleDimensionFields(values.composition.type, values.composition.leafCount);
+  const geometry = useMemo(() => {
+    try {
+      return calculateQuote(values).geometry;
+    } catch {
+      return undefined;
+    }
+  }, [values]);
 
   if (quoteId && !existing) {
     return <Notice tone="bloquant" title="Chiffrage introuvable">Ce chiffrage n’existe pas ou a été supprimé.</Notice>;
@@ -72,10 +80,41 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
     setStep(target);
   };
 
+  /** Pre-fills the transom / side fields that appear with the values of the source file. */
+  const applyComposition = (type: CompositionType, leafCount: LeafCount) => {
+    setValue('composition.type', type, { shouldValidate: true });
+    setValue('composition.leafCount', leafCount, { shouldValidate: true });
+    const def = getComposition(type);
+    const dims = form.getValues('dimensions');
+    const fill = (field: 'transomHeight' | 'leftSideWidth' | 'rightSideWidth', needed: boolean) => {
+      if (needed && dims[field] === undefined) setValue(`dimensions.${field}`, referenceDefault(field, leafCount));
+    };
+    fill('transomHeight', def.hasTransom);
+    fill('leftSideWidth', def.hasLeftSide);
+    fill('rightSideWidth', def.hasRightSide);
+  };
+
+  const applyPreset = (id: string) => {
+    const preset = REFERENCE_PRESETS.find((p) => p.id === id);
+    if (!preset) return;
+    setValue('composition.type', preset.compositionType, { shouldValidate: true });
+    setValue('composition.leafCount', preset.leafCount, { shouldValidate: true });
+    setValue('dimensions', { ...preset.dimensions }, { shouldValidate: true });
+    setValue('options.openingSide', preset.openingSide);
+    setValue('options.handing', preset.handing);
+  };
+
+  const derivedValue = (field: DimensionField): number | undefined => {
+    if (!geometry) return undefined;
+    if (field === 'mainLeafWidth') return geometry.leafWidthMm;
+    if (field === 'secondaryLeafWidth') return geometry.leafCount === 2 ? geometry.leafWidthMm : undefined;
+    return undefined;
+  };
+
   const onSave = handleSubmit((data) => {
     try {
       const result = calculateQuote(data);
-      const status = result.status === 'calcule' ? 'calcule' : 'a_completer';
+      const status = result.status === 'non_calcule' ? 'a_completer' : 'calcule';
       const saved = repository.save(quoteFromForm(data, existing, status, result.totals.materialForQuantity));
       navigate({ name: 'edit', id: saved.id });
       setSaveError(null);
@@ -133,6 +172,14 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
         {step === 1 && (
           <fieldset>
             <legend>Étape 2 — Choix de la composition</legend>
+            <div className="field">
+              <label htmlFor="preset">Partir d’une position du dossier FFR Presto (facultatif)</label>
+              <select id="preset" defaultValue="" onChange={(e) => applyPreset(e.target.value)}>
+                <option value="">— Choisir une position de référence —</option>
+                {REFERENCE_PRESETS.map((p) => <option key={p.id} value={p.id}>{p.label} (p. {p.pdfPage})</option>)}
+              </select>
+              <p className="field__hint">Renseigne la composition, les dimensions, l’ouverture et le tirant de la position choisie.</p>
+            </div>
             <div className="choice-grid" role="radiogroup" aria-label="Type de composition">
               {COMPOSITIONS.map((c) => (
                 <label key={c.type} className={`choice${values.composition.type === c.type ? ' choice--active' : ''}`}>
@@ -140,11 +187,7 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
                     type="radio"
                     value={c.type}
                     checked={values.composition.type === c.type}
-                    onChange={() => {
-                      setValue('composition.type', c.type, { shouldValidate: true });
-                      const leaves = c.leafCounts[0] ?? 1;
-                      if (!c.leafCounts.includes(values.composition.leafCount)) setValue('composition.leafCount', leaves);
-                    }}
+                    onChange={() => applyComposition(c.type, c.leafCounts.includes(values.composition.leafCount) ? values.composition.leafCount : (c.leafCounts[0] ?? 1))}
                   />
                   <span className="choice__title">{c.label}</span>
                   <span className="choice__desc">{c.description}</span>
@@ -157,7 +200,7 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
                 <span className="field__label">Nombre de vantaux</span>
                 {compositionDef.leafCounts.map((n) => (
                   <label key={n} className="radio">
-                    <input type="radio" checked={values.composition.leafCount === n} onChange={() => setValue('composition.leafCount', n, { shouldValidate: true })} />
+                    <input type="radio" checked={values.composition.leafCount === n} onChange={() => applyComposition(values.composition.type, n)} />
                     {n === 1 ? '1 vantail' : '2 vantaux'}
                   </label>
                 ))}
@@ -171,13 +214,31 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
             <legend>Étape 3 — Dimensions (mm)</legend>
             <div className="split">
               <div className="grid-2">
-                {dimensionFields.map((field) => (
+                {dimensionFields.map((field) => DERIVED_DIMENSION_FIELDS.includes(field) ? (
+                  <MmInput
+                    key={field}
+                    label={DIMENSION_LABELS[field]}
+                    value={derivedValue(field)}
+                    onChange={() => undefined}
+                    readOnly
+                    hint="Calculée par la règle P-VAN-01 (dérivée du dossier)"
+                  />
+                ) : (
                   <Controller
                     key={field}
                     control={control}
                     name={`dimensions.${field}`}
                     render={({ field: f, fieldState }) => (
-                      <MmInput label={DIMENSION_LABELS[field]} value={f.value} onChange={f.onChange} onBlur={f.onBlur} error={fieldState.error?.message} />
+                      <MmInput
+                        label={DIMENSION_LABELS[field]}
+                        value={f.value}
+                        onChange={f.onChange}
+                        onBlur={f.onBlur}
+                        error={fieldState.error?.message}
+                        hint={field === 'transomHeight' || field === 'leftSideWidth' || field === 'rightSideWidth'
+                          ? `Valeur du dossier FFR Presto : ${String(referenceDefault(field, values.composition.leafCount)).replace('.', ',')} mm`
+                          : undefined}
+                      />
                     )}
                   />
                 ))}
@@ -191,7 +252,10 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
               </div>
               <CompositionPreview type={values.composition.type} leafCount={values.composition.leafCount} dimensions={values.dimensions} handing={values.options.handing} />
             </div>
-            <Notice tone="info">Limites dimensionnelles Forster non fournies : validation min / max désactivée (règle métier à fournir).</Notice>
+            <Notice tone="info">
+              Largeur de partie latérale = longueur de la traverse du dormant au-dessus de la partie fixe ; hauteur d’imposte = hauteur totale − hauteur
+              de la zone porte (dossier : 2 170 mm). Limites dimensionnelles Forster non fournies : validation min / max désactivée (règle métier à fournir).
+            </Notice>
           </fieldset>
         )}
 

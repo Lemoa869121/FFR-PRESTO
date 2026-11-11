@@ -36,6 +36,23 @@
 | Génération du résultat | `src/calculation` → `CalculationResult` |
 | Traçabilité des sources | `CuttingListItem.trace` (`ruleId`, `ruleStatus`, `referenceSource`, `priceSource`) |
 
+## Moteur Presto
+
+```
+CalculationInput ──► presto/fromInput.ts ──► PrestoConfig (+ alertes : DIN, extrapolation, options ignorées)
+                                  │
+                                  ▼
+                     presto/generate.ts  (règles P-DOR / P-VAN / P-VIT / P-JNT / P-QUI / P-ACC)
+                                  │  GeneratedLine { ref, longueur, coupe, côté, quantité, ruleId }
+                                  ▼
+                     presto/toCuttingList.ts ◄── catalogue.json (désignations + source page/ligne)
+                                  │           ◄── PriceBook (vide)
+                                  ▼
+                     CuttingListItem[] + totaux (null sans tarif) + position de référence éventuelle
+```
+
+`presto/referencePositions.ts` décrit les 32 positions du dossier sous forme de paramètres ; les tests génèrent chacune et la comparent à la nomenclature importée.
+
 ## Flux d’un chiffrage
 
 1. L’assistant (`QuoteWizardPage`) collecte les valeurs avec React Hook Form ; Zod les valide (`validation/quoteSchema.ts`).
