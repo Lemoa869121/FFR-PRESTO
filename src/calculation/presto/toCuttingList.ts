@@ -4,6 +4,7 @@ import type { PriceBook } from '../../pricing/priceBook';
 import type { GeneratedLine, LineGroup, PrestoBom } from './types';
 import { getRule } from './rules';
 import { roundHalfUp } from './generate';
+import { CUTTING_TOLERANCES, PROFILE_DATA } from '../../data/sources/presto-manual/manual';
 
 const CATEGORY: Record<LineGroup, MaterialCategory> = {
   profiles: 'profiles',
@@ -56,6 +57,10 @@ export function toCuttingList(bom: PrestoBom, catalogue: Catalogue, prices: Pric
       ? `Remplissage ${line.glass.widthMm} × ${line.glass.heightMm} mm — ${line.glass.descriptionRaw}`
       : entry?.descriptionRaw ?? 'Désignation non trouvée dans la source';
     const refSource = entry ? `réf. lue p. ${entry.firstSeen.pdfPage}, l. ${entry.firstSeen.line} (${entry.firstSeen.positionId})` : 'remplissage sans référence dans la source';
+    const profile = line.ref ? PROFILE_DATA[line.ref] : undefined;
+    const weightKg = profile && line.lengthMm !== undefined ? roundHalfUp((profile.kgPerM * line.lengthMm * quantity) / 1000, 3) : undefined;
+    const tolerance = rule.id.startsWith('P-DOR') ? `Tolérance de coupe dormant ${CUTTING_TOLERANCES.frame}`
+      : rule.id.startsWith('P-VAN') ? `Tolérance de coupe vantail ${CUTTING_TOLERANCES.leaf}` : undefined;
     items.push({
       reference: line.ref ?? '—',
       designation,
@@ -70,7 +75,11 @@ export function toCuttingList(bom: PrestoBom, catalogue: Catalogue, prices: Pric
       unitPrice,
       totalPrice: unitPrice === null ? null : roundHalfUp(unitPrice * quantity, 2),
       dataSource: `Règle ${rule.id} (${STATUS_LABEL[rule.status]}) · ${refSource}`,
-      comment: line.glass ? `Surface ${String(line.glass.areaM2).replace('.', ',')} m² par champ` : undefined,
+      comment: line.glass
+        ? `Surface ${String(line.glass.areaM2).replace('.', ',')} m² par champ`
+        : [tolerance && `${tolerance} (guide ${CUTTING_TOLERANCES.source.vp})`, profile && `barre ${profile.barLengthMm} mm, ${String(profile.kgPerM).replace('.', ',')} kg/m (${profile.source.vp})`]
+          .filter(Boolean).join(' · ') || undefined,
+      weightKg,
       trace: {
         ruleId: rule.id,
         ruleStatus: rule.status,

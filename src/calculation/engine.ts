@@ -9,6 +9,8 @@ import { prestoConfigFromInput } from './presto/fromInput';
 import { generatePrestoBom, PrestoConfigError } from './presto/generate';
 import { computeTotals, toCuttingList } from './presto/toCuttingList';
 import { findReferencePosition } from './presto/referencePositions';
+import { manualChecks } from './presto/manualChecks';
+import { roundHalfUp } from './presto/generate';
 
 export type { CalculationInput } from './types';
 
@@ -54,7 +56,12 @@ export function calculateQuote(input: CalculationInput, deps: EngineDependencies
     throw error;
   }
 
+  const checks = manualChecks(bom);
+  warnings.push(...checks);
+  if (checks.some((w) => w.level === 'bloquant')) return { status: 'non_calcule', cuttingList: [], totals: EMPTY_TOTALS, warnings };
+
   const cuttingList = toCuttingList(bom, deps.catalogue, deps.prices);
+  const profileWeightKg = roundHalfUp(cuttingList.reduce((s, i) => s + (i.weightKg ?? 0), 0), 2);
   const totals = computeTotals(cuttingList, input.project.quantity);
   const reference = findReferencePosition(config);
   if (reference) {
@@ -78,6 +85,7 @@ export function calculateQuote(input: CalculationInput, deps: EngineDependencies
     totals,
     warnings,
     referencePositionId: reference?.id,
+    profileWeightKg,
     geometry: {
       doorFrameWidthMm: bom.geometry.doorFrameWidth,
       doorZoneHeightMm: bom.geometry.doorZoneHeight,
