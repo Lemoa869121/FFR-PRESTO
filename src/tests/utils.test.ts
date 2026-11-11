@@ -42,7 +42,7 @@ describe('file information', () => {
 
 describe('hash router', () => {
   it('round-trips every route', () => {
-    for (const hash of ['#/', '#/chiffrage/nouveau', '#/chiffrage/abc', '#/debit', '#/debit/abc', '#/import']) {
+    for (const hash of ['#/', '#/chiffrage/nouveau', '#/chiffrage/abc', '#/debit', '#/debit/abc', '#/import', '#/regles']) {
       expect(routeToHash(parseHash(hash))).toBe(hash);
     }
     expect(parseHash('#/inconnu')).toEqual({ name: 'dashboard' });
