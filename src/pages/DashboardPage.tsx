@@ -31,14 +31,21 @@ export function DashboardPage({ repository }: { repository: QuoteRepository }) {
 
   return (
     <section aria-labelledby="dashboard-title">
-      <div className="page-head">
-        <div>
-          <h1 id="dashboard-title">Tableau de bord</h1>
-          <p className="muted">Chiffrages enregistrés sur ce poste (stockage local du navigateur).</p>
-        </div>
-        <button type="button" className="btn btn--primary" onClick={() => navigate({ name: 'new' })}>
-          Nouveau chiffrage
-        </button>
+      <div className="hero">
+        <span className="pill">Chiffrage matériel Forster Presto</span>
+        <h1 id="dashboard-title">
+          Tableau de bord
+          <span className="hero__accent">Portes et châssis Presto</span>
+        </h1>
+        <p>
+          Chiffrages enregistrés sur ce poste (stockage local du navigateur). Les nomenclatures sont calculées avec les règles
+          dérivées du dossier de fabrication forsterpro « FFR Presto ».
+        </p>
+        <p>
+          <button type="button" className="btn btn--primary" onClick={() => navigate({ name: 'new' })}>
+            Nouveau chiffrage
+          </button>
+        </p>
       </div>
 
       {state.error && <Notice tone="bloquant" title="Lecture impossible">{state.error}</Notice>}
