@@ -72,7 +72,7 @@ describe('individual rules', () => {
   const int003: PrestoConfig = { openingSide: 'interieur', leafCount: 1, din: 'L', totalWidth: 2036.5, totalHeight: 2170, leftSideWidth: 0, rightSideWidth: 963.5, transomHeight: 0, floorGap: 10 };
 
   it('P-VAN-01: leaf size from the door frame (simple and double)', () => {
-    expect(generatePrestoBom(int003).geometry).toEqual({ doorFrameWidth: 1073, doorZoneHeight: 2170, leafWidth: 993, leafHeight: 2120 });
+    expect(generatePrestoBom(int003).geometry).toMatchObject({ doorFrameWidth: 1073, doorZoneHeight: 2170, leafWidth: 993, leafHeight: 2120, clearPassage: 900, activeClearPassage: 900, clearHeight: 2100 });
     expect(generatePrestoBom({ ...int003, leafCount: 2, totalWidth: 2036, rightSideWidth: 0 }).geometry.leafWidth).toBe(993);
   });
 
@@ -132,7 +132,7 @@ describe('rule registry', () => {
   it('flags the ambiguous rules as "à valider"', () => {
     expect(getRule('P-ACC-01').status).toBe('a_valider');
     expect(getRule('P-ACC-02').status).toBe('a_valider');
-    expect(getRule('P-CFG-01').status).toBe('a_valider');
+    expect(getRule('P-CFG-01').status).toBe('explicite');
     expect(new Set(PRESTO_RULES.map((r) => r.id)).size).toBe(PRESTO_RULES.length);
   });
 });

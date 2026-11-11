@@ -9,7 +9,7 @@ function sampleQuote(id: string, updatedAt = '2026-11-11T10:00:00.000Z'): Quote 
     composition: { type: 'porte_simple', leafCount: 1, elements: [] },
     dimensions: { totalWidth: 1073, totalHeight: 2170 },
     options: {
-      system: '', openingDirection: '', openingSide: 'interieur', handing: 'tirant_gauche', glazingType: '', infillType: '',
+      system: '', openingDirection: '', openingSide: 'interieur', handing: 'din_gauche', glazingType: '', infillType: '',
       finish: '', colour: '', lockType: '', handleType: '', doorCloser: '', panicBar: '', otherAccessories: '',
     },
     status: 'brouillon',
@@ -70,5 +70,11 @@ describe('QuoteRepository', () => {
   it('reports a full storage', () => {
     const repo = new QuoteRepository({ getItem: () => null, setItem: () => { throw new Error('QuotaExceeded'); } });
     expect(() => repo.save(sampleQuote('a'))).toThrow(StorageError);
+  });
+
+  it('migrates quotes saved with the former "tirant" handing to DIN', () => {
+    const old = { ...sampleQuote('old'), options: { ...sampleQuote('old').options, handing: 'tirant_droit' } };
+    const repo = new QuoteRepository(createMemoryStore({ [STORAGE_KEY]: JSON.stringify([old]) }));
+    expect(repo.get('old')?.options.handing).toBe('din_droite');
   });
 });
