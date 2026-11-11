@@ -185,6 +185,8 @@ export interface CalculationResult {
   warnings: ValidationWarning[];
   /** Id of the reference position the configuration matches exactly, if any. */
   referencePositionId?: string;
+  /** Main dimensions derived by the rules (mm). */
+  geometry?: { doorFrameWidthMm: number; doorZoneHeightMm: number; leafWidthMm: number; leafHeightMm: number; leafCount: LeafCount };
 }
 
 /** Mapping between a column of an imported spreadsheet and a target field. */
