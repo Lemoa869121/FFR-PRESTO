@@ -59,3 +59,7 @@ L'environnement de développement initial n'avait pas accès au registre npm. Le
 ## D-015 — Charte graphique Forster (identique à SERRURE_STD)
 
 Remplace la consigne initiale « identité visuelle neutre, sans logo Forster tant qu’aucun fichier n’est fourni » : le logo officiel et la police Faktum ont été fournis (11/11/2026) et la charte validée le 10/11/2026 sur SERRURE_STD est appliquée (voir `docs/charte-graphique.md`). FFR-PRESTO reste sans Tailwind : les couleurs de la charte sont des variables CSS aux mêmes noms (`--fo-blue`, `--fo-blue2`, `--fo-ink`, `--fo-grey`). Licence web de Faktum à confirmer, le dépôt étant public.
+
+## D-016 — Guide de mise en œuvre presto comme deuxième source
+
+Le guide Forster presto 918301 (01/2021) ne contient pas de formules de débit mais des cotes de construction, des tables et des règles de pose. Il sert à **confirmer** des règles dérivées, qui deviennent « explicites » avec la page VP citée (P-VAN-01, P-ACC-04), à **ajouter** des contrôles explicites (P-CTL-01 à 04, P-CFG-03) et à **encadrer** les règles ambiguës (P-ACC-01). Une règle explicite du guide qui contredirait le dossier FFR Presto ne serait pas appliquée silencieusement : l'écart serait signalé. Aucun cas de ce type n'a été trouvé. Le PDF (141 Mo) n'est pas versionné ; il est identifié par son SHA-256.

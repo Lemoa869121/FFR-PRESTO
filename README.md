@@ -87,7 +87,8 @@ Le chemin de base est `/FFR-PRESTO/` sur GitHub Actions et `/` en local ; la var
 | Limites dimensionnelles | **Règle métier à fournir** : contrôle désactivé |
 | Système | Forster Presto — presto XS 50 Standard Aluminium (source : dossier FFR Presto) |
 | Références produits | 23 références lues dans le dossier, avec page et ligne |
-| Règles de débit | 30 règles dérivées des 32 positions ; 3 « à valider » ([`docs/calculation-rules.md`](docs/calculation-rules.md)) |
+| Règles de débit | 36 règles : dérivées des 32 positions du dossier, confirmées ou complétées par le guide de mise en œuvre presto (pages VP citées) ; 3 « à valider » ([`docs/calculation-rules.md`](docs/calculation-rules.md)) |
+| Guide de mise en œuvre presto 918301 | Cotes du vantail, contrôles (120 mm, charges des paumelles), tolérances, poids et unités de vente ([`docs/analyse-guide-mise-en-oeuvre.md`](docs/analyse-guide-mise-en-oeuvre.md)) |
 | Hors dimensions du dossier | Calcul extrapolé, signalé « à valider » |
 | Châssis fixe seul, composition personnalisée | **Règle métier à fournir** |
 
