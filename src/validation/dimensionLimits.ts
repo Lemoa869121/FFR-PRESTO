@@ -16,7 +16,7 @@ export interface DimensionLimit {
 }
 
 export const DIMENSION_LIMITS: readonly DimensionLimit[] = (
-  ['totalWidth', 'totalHeight', 'mainLeafWidth', 'secondaryLeafWidth', 'transomHeight', 'leftSideWidth', 'rightSideWidth', 'floorGap'] as const
+  ['totalWidth', 'totalHeight', 'mainLeafWidth', 'secondaryLeafWidth', 'transomHeight', 'leftSideWidth', 'rightSideWidth', 'floorGap', 'clearPassage', 'activeClearPassage'] as const
 ).map((field) => ({ field, enabled: false, source: 'Règle métier à fournir' }));
 
 export function checkDimensionLimits(

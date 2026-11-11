@@ -13,6 +13,8 @@ export interface PrestoConfig {
   transomHeight: number;
   /** Gap between the leaf and the finished floor (P-CFG-03); 10 mm in the FFR Presto file. */
   floorGap: number;
+  /** Width of the active leaf of a double door; default: two equal leaves (P-VAN-05). */
+  activeLeafWidth?: number;
 }
 
 export type PrestoElementKind = 'dormant' | 'porte' | 'fixe';
@@ -45,8 +47,17 @@ export interface GeneratedElement {
 export interface PrestoGeometry {
   doorFrameWidth: number;
   doorZoneHeight: number;
+  /** Single door leaf, or active leaf of a double door. */
   leafWidth: number;
+  /** Passive leaf of a double door. */
+  secondaryLeafWidth?: number;
   leafHeight: number;
+  /** Clear passage with all leaves open at 90° (P-PL-01). */
+  clearPassage: number;
+  /** Clear passage of the active leaf alone (P-PL-02). */
+  activeClearPassage: number;
+  /** Clear height (P-PL-03). */
+  clearHeight: number;
 }
 
 export interface PrestoBom {

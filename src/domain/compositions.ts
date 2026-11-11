@@ -1,6 +1,5 @@
 import type { CompositionType, Dimensions, Element, LeafCount } from '../types';
 
-export type DimensionField = keyof Dimensions;
 
 export interface CompositionDefinition {
   type: CompositionType;
@@ -40,22 +39,50 @@ export function getComposition(type: CompositionType): CompositionDefinition {
   return def;
 }
 
-/** Dimension fields shown in the form for a given composition. */
-export function visibleDimensionFields(type: CompositionType, leafCount: LeafCount): DimensionField[] {
+export type DimensionField = Exclude<keyof Dimensions, 'sizingMode'>;
+
+export interface DimensionFieldSpec {
+  field: DimensionField;
+  /** false = value computed by the application (shown read-only). */
+  editable: boolean;
+}
+
+/**
+ * Dimension fields shown in the form for a composition, in display order.
+ * Doors with a fixed part are sized by their clear passage; a double door alone by
+ * its total width or its clear passage (dims.sizingMode).
+ */
+export function dimensionFieldSpecs(type: CompositionType, leafCount: LeafCount, dims: Pick<Dimensions, 'sizingMode'> = {}): DimensionFieldSpec[] {
   const def = getComposition(type);
-  const fields: DimensionField[] = ['totalWidth', 'totalHeight'];
-  if (def.hasDoor) fields.push('mainLeafWidth');
-  if (def.hasDoor && leafCount === 2) fields.push('secondaryLeafWidth');
-  if (def.hasDoor) fields.push('floorGap');
-  if (def.hasTransom) fields.push('transomHeight');
-  if (def.hasLeftSide) fields.push('leftSideWidth');
-  if (def.hasRightSide) fields.push('rightSideWidth');
-  return fields;
+  const hasSide = def.hasLeftSide || def.hasRightSide;
+  const byPassage = def.hasDoor && (hasSide || (leafCount === 2 && dims.sizingMode === 'passage_libre'));
+  const specs: DimensionFieldSpec[] = [
+    { field: 'totalWidth', editable: !(def.hasDoor && !hasSide && byPassage) },
+    { field: 'totalHeight', editable: true },
+  ];
+  if (def.hasDoor) {
+    specs.push({ field: 'clearPassage', editable: byPassage });
+    if (leafCount === 2) specs.push({ field: 'activeClearPassage', editable: true });
+    specs.push({ field: 'mainLeafWidth', editable: false });
+    if (leafCount === 2) specs.push({ field: 'secondaryLeafWidth', editable: false });
+    specs.push({ field: 'floorGap', editable: true });
+  }
+  if (def.hasTransom) specs.push({ field: 'transomHeight', editable: true });
+  if (def.hasLeftSide) specs.push({ field: 'leftSideWidth', editable: !def.hasDoor });
+  if (def.hasRightSide) specs.push({ field: 'rightSideWidth', editable: !def.hasDoor });
+  return specs;
+}
+
+/** Dimension fields shown in the form for a given composition. */
+export function visibleDimensionFields(type: CompositionType, leafCount: LeafCount, dims: Pick<Dimensions, 'sizingMode'> = {}): DimensionField[] {
+  return dimensionFieldSpecs(type, leafCount, dims).map((s) => s.field);
 }
 
 export const DIMENSION_LABELS: Record<DimensionField, string> = {
   totalWidth: 'Largeur totale',
   totalHeight: 'Hauteur totale',
+  clearPassage: 'Passage libre (vantaux ouverts à 90°)',
+  activeClearPassage: 'Passage libre du vantail principal',
   mainLeafWidth: 'Largeur du vantail principal',
   secondaryLeafWidth: 'Largeur du vantail secondaire',
   transomHeight: 'Hauteur de l’imposte',
@@ -64,8 +91,6 @@ export const DIMENSION_LABELS: Record<DimensionField, string> = {
   rightSideWidth: 'Largeur de la partie latérale droite',
 };
 
-/** Dimensions computed by the application (read-only in the form). */
-export const DERIVED_DIMENSION_FIELDS: readonly DimensionField[] = ['mainLeafWidth', 'secondaryLeafWidth'];
 
 /**
  * Splits a composition into its elements (used by the preview and the summary).

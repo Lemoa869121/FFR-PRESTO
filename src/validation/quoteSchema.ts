@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { getComposition, visibleDimensionFields } from '../domain/compositions';
+import { dimensionFieldSpecs, getComposition } from '../domain/compositions';
+import { resolveDoorSizing } from '../domain/doorSizing';
 import type { CompositionType } from '../types';
 
 const positiveMm = z
@@ -35,6 +36,9 @@ export const dimensionsSchema = z.object({
   mainLeafWidth: optionalMm,
   secondaryLeafWidth: optionalMm,
   transomHeight: optionalMm,
+  clearPassage: optionalMm,
+  activeClearPassage: optionalMm,
+  sizingMode: z.enum(['largeur_totale', 'passage_libre']).optional(),
   floorGap: z.number({ error: 'Valeur numérique attendue (mm).' }).min(0, 'Valeur positive attendue.').max(100, 'Valeur hors plage (mm).').optional(),
   leftSideWidth: optionalMm,
   rightSideWidth: optionalMm,
@@ -44,7 +48,7 @@ export const optionsSchema = z.object({
   system: z.string(),
   openingDirection: z.string(),
   openingSide: z.enum(['interieur', 'exterieur']),
-  handing: z.enum(['tirant_gauche', 'tirant_droit']),
+  handing: z.enum(['din_gauche', 'din_droite']),
   glazingType: z.string(),
   infillType: z.string(),
   finish: z.string(),
@@ -68,17 +72,24 @@ export const quoteFormSchema = z
     if (!def.leafCounts.includes(value.composition.leafCount)) {
       ctx.addIssue({ code: 'custom', path: ['composition', 'leafCount'], message: 'Nombre de vantaux incompatible avec la composition.' });
     }
-    const required = visibleDimensionFields(value.composition.type, value.composition.leafCount)
-      .filter((f) => f === 'transomHeight' || f === 'leftSideWidth' || f === 'rightSideWidth');
-    for (const field of required) {
-      if (value.dimensions[field] === undefined) {
+    const d = value.dimensions;
+    const required = dimensionFieldSpecs(value.composition.type, value.composition.leafCount, d)
+      .filter((s) => s.editable && ['transomHeight', 'leftSideWidth', 'rightSideWidth', 'clearPassage'].includes(s.field));
+    for (const { field } of required) {
+      if (d[field] === undefined) {
         ctx.addIssue({ code: 'custom', path: ['dimensions', field], message: 'Dimension obligatoire pour cette composition.' });
       }
     }
-    const d = value.dimensions;
-    const parts = (def.hasLeftSide ? d.leftSideWidth ?? 0 : 0) + (def.hasRightSide ? d.rightSideWidth ?? 0 : 0);
-    if (parts >= d.totalWidth) {
-      ctx.addIssue({ code: 'custom', path: ['dimensions', 'totalWidth'], message: 'La largeur totale doit dépasser la somme des parties latérales.' });
+    if (def.hasDoor) {
+      const sizing = resolveDoorSizing(value.composition.type, value.composition.leafCount, d);
+      for (const message of sizing.errors) {
+        ctx.addIssue({ code: 'custom', path: ['dimensions', d.clearPassage === undefined ? 'clearPassage' : 'totalWidth'], message });
+      }
+    } else {
+      const parts = (def.hasLeftSide ? d.leftSideWidth ?? 0 : 0) + (def.hasRightSide ? d.rightSideWidth ?? 0 : 0);
+      if (parts >= d.totalWidth) {
+        ctx.addIssue({ code: 'custom', path: ['dimensions', 'totalWidth'], message: 'La largeur totale doit dépasser la somme des parties latérales.' });
+      }
     }
     if (def.hasTransom && (d.transomHeight ?? 0) >= d.totalHeight) {
       ctx.addIssue({ code: 'custom', path: ['dimensions', 'transomHeight'], message: 'L’imposte doit être moins haute que la hauteur totale.' });

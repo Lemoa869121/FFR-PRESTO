@@ -92,6 +92,13 @@ export function calculateQuote(input: CalculationInput, deps: EngineDependencies
       leafWidthMm: bom.geometry.leafWidth,
       leafHeightMm: bom.geometry.leafHeight,
       leafCount: config.leafCount,
+      ...(bom.geometry.secondaryLeafWidth !== undefined ? { secondaryLeafWidthMm: bom.geometry.secondaryLeafWidth } : {}),
+      totalWidthMm: config.totalWidth,
+      leftSideWidthMm: config.leftSideWidth,
+      rightSideWidthMm: config.rightSideWidth,
+      clearPassageMm: bom.geometry.clearPassage,
+      activeClearPassageMm: bom.geometry.activeClearPassage,
+      clearHeightMm: bom.geometry.clearHeight,
     },
   };
 }
