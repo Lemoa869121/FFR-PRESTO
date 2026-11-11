@@ -1,0 +1,328 @@
+{
+ "documentId": "ffr-presto-2026-11-11",
+ "entries": [
+  {
+   "ref": "32.800",
+   "descriptionRaw": "Forster PRESTO",
+   "group": "profiles",
+   "unitRaw": "Pce",
+   "firstSeen": {
+    "pdfPage": 1,
+    "printedPage": 1,
+    "line": 30,
+    "positionId": "Int 001"
+   },
+   "occurrences": 48,
+   "sectionRaw": "50,0 mm / Hauteur: 70,0",
+   "barLengthMm": 6000,
+   "materialRaw": "Acier brut"
+  },
+  {
+   "ref": "32.803",
+   "descriptionRaw": "Forster PRESTO",
+   "group": "profiles",
+   "unitRaw": "Pce",
+   "firstSeen": {
+    "pdfPage": 5,
+    "printedPage": 5,
+    "line": 12,
+    "positionId": "Int 002"
+   },
+   "occurrences": 96,
+   "sectionRaw": "50,0 mm / Hauteur: 90,0",
+   "barLengthMm": 6000,
+   "materialRaw": "Acier brut"
+  },
+  {
+   "ref": "32.805",
+   "descriptionRaw": "Forster PRESTO",
+   "group": "profiles",
+   "unitRaw": "Pce",
+   "firstSeen": {
+    "pdfPage": 2,
+    "printedPage": 2,
+    "line": 19,
+    "positionId": "Int 001"
+   },
+   "occurrences": 96,
+   "sectionRaw": "50,0 mm / Hauteur: 90,0",
+   "barLengthMm": 6000,
+   "materialRaw": "Acier brut"
+  },
+  {
+   "ref": "32.851",
+   "descriptionRaw": "Forster PRESTO",
+   "group": "profiles",
+   "unitRaw": "Pce",
+   "firstSeen": {
+    "pdfPage": 4,
+    "printedPage": 4,
+    "line": 32,
+    "positionId": "Int 002"
+   },
+   "occurrences": 112,
+   "sectionRaw": "50,0 mm / Hauteur: 70,0",
+   "barLengthMm": 6000,
+   "materialRaw": "Acier brut"
+  },
+  {
+   "ref": "32.852",
+   "descriptionRaw": "Forster PRESTO",
+   "group": "profiles",
+   "unitRaw": "Pce",
+   "firstSeen": {
+    "pdfPage": 17,
+    "printedPage": 17,
+    "line": 10,
+    "positionId": "Int 004"
+   },
+   "occurrences": 32,
+   "sectionRaw": "50,0 mm / Hauteur: 90,0",
+   "barLengthMm": 6000,
+   "materialRaw": "Acier brut"
+  },
+  {
+   "ref": "32.855",
+   "descriptionRaw": "Forster PRESTO",
+   "group": "profiles",
+   "unitRaw": "Pce",
+   "firstSeen": {
+    "pdfPage": 2,
+    "printedPage": 2,
+    "line": 29,
+    "positionId": "Int 001"
+   },
+   "occurrences": 48,
+   "sectionRaw": "50,0 mm / Hauteur: 90,0",
+   "barLengthMm": 6000,
+   "materialRaw": "Acier brut"
+  },
+  {
+   "ref": "900100",
+   "descriptionRaw": "douilles d'écoulement",
+   "group": "accessories",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 3,
+    "printedPage": 3,
+    "line": 19,
+    "positionId": "Int 001"
+   },
+   "occurrences": 60
+  },
+  {
+   "ref": "901335",
+   "descriptionRaw": "Parclose aluminium",
+   "group": "glazing_beads",
+   "unitRaw": "Pce",
+   "firstSeen": {
+    "pdfPage": 2,
+    "printedPage": 2,
+    "line": 38,
+    "positionId": "Int 001"
+   },
+   "occurrences": 336,
+   "sectionRaw": "30,0 mm / Hauteur: 20,0",
+   "barLengthMm": 6000,
+   "materialRaw": "Aluminium"
+  },
+  {
+   "ref": "905306",
+   "descriptionRaw": "joint EPDM",
+   "group": "gaskets",
+   "unitRaw": "m",
+   "firstSeen": {
+    "pdfPage": 2,
+    "printedPage": 2,
+    "line": 9,
+    "positionId": "Int 001"
+   },
+   "occurrences": 64
+  },
+  {
+   "ref": "905312",
+   "descriptionRaw": "joint pour vitrage à sec adhesif",
+   "group": "gaskets",
+   "unitRaw": "m",
+   "firstSeen": {
+    "pdfPage": 3,
+    "printedPage": 3,
+    "line": 13,
+    "positionId": "Int 001"
+   },
+   "occurrences": 84
+  },
+  {
+   "ref": "905317",
+   "descriptionRaw": "joint étanchéité vitrage à sec intérieur",
+   "group": "gaskets",
+   "unitRaw": "m",
+   "firstSeen": {
+    "pdfPage": 3,
+    "printedPage": 3,
+    "line": 15,
+    "positionId": "Int 001"
+   },
+   "occurrences": 84
+  },
+  {
+   "ref": "905702",
+   "descriptionRaw": "Pièce d'etancheite droite",
+   "group": "accessories",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 49,
+    "printedPage": 49,
+    "line": 36,
+    "positionId": "Int 009b"
+   },
+   "occurrences": 4
+  },
+  {
+   "ref": "905703",
+   "descriptionRaw": "Pièce d'etancheite CR gauche",
+   "group": "accessories",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 37,
+    "printedPage": 37,
+    "line": 43,
+    "positionId": "Int 007"
+   },
+   "occurrences": 12
+  },
+  {
+   "ref": "906579",
+   "descriptionRaw": "boutons autotaraudeurs",
+   "group": "accessories",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 3,
+    "printedPage": 3,
+    "line": 21,
+    "positionId": "Int 001"
+   },
+   "occurrences": 84
+  },
+  {
+   "ref": "907662",
+   "descriptionRaw": "paumelle à souder",
+   "group": "hardware",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 2,
+    "printedPage": 2,
+    "line": 52,
+    "positionId": "Int 001"
+   },
+   "occurrences": 32
+  },
+  {
+   "ref": "916320",
+   "descriptionRaw": "filler piece for profile left",
+   "group": "accessories",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 3,
+    "printedPage": 3,
+    "line": 23,
+    "positionId": "Int 001"
+   },
+   "occurrences": 32
+  },
+  {
+   "ref": "916322",
+   "descriptionRaw": "filler piece for profile right",
+   "group": "accessories",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 3,
+    "printedPage": 3,
+    "line": 25,
+    "positionId": "Int 001"
+   },
+   "occurrences": 32
+  },
+  {
+   "ref": "FFR019FND",
+   "descriptionRaw": "Kit n°1, 2 béquille + carré de 8 + rosaces",
+   "group": "hardware",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 2,
+    "printedPage": 2,
+    "line": 54,
+    "positionId": "Int 001"
+   },
+   "occurrences": 32
+  },
+  {
+   "ref": "FFR042FND",
+   "descriptionRaw": "Serrure 1 point Pdt et 1/2 tour TP de 22mm",
+   "group": "hardware",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 2,
+    "printedPage": 2,
+    "line": 56,
+    "positionId": "Int 001"
+   },
+   "occurrences": 32
+  },
+  {
+   "ref": "FFR045FND",
+   "descriptionRaw": "Serrure 2 points à levier",
+   "group": "hardware",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 37,
+    "printedPage": 37,
+    "line": 26,
+    "positionId": "Int 007"
+   },
+   "occurrences": 16
+  },
+  {
+   "ref": "FFR046FND",
+   "descriptionRaw": "Gâche",
+   "group": "hardware",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 3,
+    "printedPage": 3,
+    "line": 8,
+    "positionId": "Int 001"
+   },
+   "occurrences": 32
+  },
+  {
+   "ref": "FFR049FND",
+   "descriptionRaw": "Kit tringles M 8 Lg 1000mm et Lg 1500mm + 2 embouts+ 1 gâche",
+   "group": "hardware",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 37,
+    "printedPage": 37,
+    "line": 28,
+    "positionId": "Int 007"
+   },
+   "occurrences": 16
+  },
+  {
+   "ref": "FFR050FND",
+   "descriptionRaw": "Gâche au sol avec obturateur",
+   "group": "hardware",
+   "unitRaw": "pce",
+   "firstSeen": {
+    "pdfPage": 37,
+    "printedPage": 37,
+    "line": 30,
+    "positionId": "Int 007"
+   },
+   "occurrences": 16
+  }
+ ],
+ "glazingDescriptions": [
+  "Sans vitrage, 9 mm"
+ ]
+}
