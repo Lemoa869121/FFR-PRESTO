@@ -4,6 +4,8 @@
 
 > ⚠️ **Statut des données** : aucun prix réel n’est intégré. Les règles de débit Presto sont **dérivées** du dossier de fabrication forsterpro « FFR Presto » et vérifiées sur ses 32 positions ([`docs/calculation-rules.md`](docs/calculation-rules.md)). Les listes d’options marquées « Donnée de démonstration » sont fictives et ne sont pas utilisées par le calcul.
 
+L’interface suit la **charte graphique Forster**, identique à celle de SERRURE_STD : couleurs, police Faktum, logo officiel ([`docs/charte-graphique.md`](docs/charte-graphique.md)).
+
 ## Objectif
 
 Remplacer le chiffrage manuel par une application qui, à partir d’une composition et de ses dimensions, produit :
