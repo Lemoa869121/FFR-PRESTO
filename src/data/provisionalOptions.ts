@@ -1,10 +1,11 @@
 import type { TechnicalOptions } from '../types';
+import { PRESTO_SYSTEM } from '../calculation/presto/fromInput';
 
 /**
- * PROVISIONAL option lists ("Donnée de démonstration").
- * None of these values is a Forster reference: they only make the form usable
- * until the real catalogue is provided. Each list carries its status so that the
- * UI can display it.
+ * Option lists. Only the system comes from a source document; the other lists are
+ * PROVISIONAL ("Donnée de démonstration"): none of these values is a Forster
+ * reference, and they are not used by the calculation. Each list carries its
+ * status so that the UI can display it.
  */
 export interface OptionList {
   field: keyof TechnicalOptions;
@@ -18,7 +19,13 @@ const NOT_DEFINED = { value: '', label: '— À définir —' };
 const demo = (labels: string[]) => [NOT_DEFINED, ...labels.map((l) => ({ value: l, label: `${l} (démonstration)` }))];
 
 export const OPTION_LISTS: OptionList[] = [
-  { field: 'system', label: 'Système Forster', status: 'provisoire', sourceNote: 'Donnée de démonstration', choices: demo(['Système A', 'Système B']) },
+  {
+    field: 'system',
+    label: 'Système Forster',
+    status: 'source',
+    sourceNote: 'Dossier de fabrication FFR Presto, « Série »',
+    choices: [{ value: PRESTO_SYSTEM, label: 'Forster Presto — presto XS 50 Standard Aluminium' }],
+  },
   { field: 'openingDirection', label: 'Sens d’ouverture', status: 'provisoire', sourceNote: 'Valeur provisoire', choices: demo(['Poussant', 'Tirant']) },
   { field: 'glazingType', label: 'Type de vitrage', status: 'provisoire', sourceNote: 'Donnée de démonstration', choices: demo(['Vitrage 1', 'Vitrage 2']) },
   { field: 'infillType', label: 'Type de remplissage', status: 'provisoire', sourceNote: 'Donnée de démonstration', choices: demo(['Vitré', 'Panneau plein']) },
@@ -31,7 +38,7 @@ export const OPTION_LISTS: OptionList[] = [
 ];
 
 export const DEFAULT_OPTIONS: TechnicalOptions = {
-  system: '',
+  system: PRESTO_SYSTEM,
   openingDirection: '',
   openingSide: 'interieur',
   handing: 'tirant_gauche',

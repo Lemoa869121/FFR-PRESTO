@@ -42,7 +42,7 @@ export function CuttingListPage({ repository, quoteId }: { repository: QuoteRepo
         Catégories prévues : {CATEGORY_ORDER.map((c) => CATEGORY_LABELS[c]).join(', ')}.
       </p>
 
-      <CuttingListTable items={result?.cuttingList ?? []} />
+      <CuttingListTable items={result?.cuttingList ?? []} caption={`Liste de débit matière — quantités pour 1 composition${quote ? ` (commande : ${quote.project.quantity})` : ''}`} />
 
       {result && (
         <>

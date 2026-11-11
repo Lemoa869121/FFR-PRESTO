@@ -5,12 +5,14 @@ import { DashboardPage } from '../pages/DashboardPage';
 import { QuoteWizardPage } from '../pages/QuoteWizardPage';
 import { CuttingListPage } from '../pages/CuttingListPage';
 import { ImportPage } from '../pages/ImportPage';
+import { RulesPage } from '../pages/RulesPage';
 
 const NAV: { label: string; route: Route }[] = [
   { label: 'Tableau de bord', route: { name: 'dashboard' } },
   { label: 'Nouveau chiffrage', route: { name: 'new' } },
   { label: 'Liste de débit', route: { name: 'cutting' } },
   { label: 'Import des données', route: { name: 'import' } },
+  { label: 'Règles de calcul', route: { name: 'rules' } },
 ];
 
 export function App() {
@@ -50,11 +52,12 @@ export function App() {
         {route.name === 'edit' && <QuoteWizardPage key={route.id} repository={repository} quoteId={route.id} />}
         {route.name === 'cutting' && <CuttingListPage repository={repository} quoteId={route.id} />}
         {route.name === 'import' && <ImportPage />}
+        {route.name === 'rules' && <RulesPage />}
       </main>
       <footer className="app-footer">
         <p>
           Application interne — V1 matériel uniquement (hors main-d’œuvre, performances feu / acoustique / thermique,
-          remises et marges). Aucun prix réel n’est intégré.
+          remises et marges). Aucun prix réel n’est intégré. Règles Presto dérivées du dossier forsterpro « FFR Presto ».
         </p>
       </footer>
     </div>
