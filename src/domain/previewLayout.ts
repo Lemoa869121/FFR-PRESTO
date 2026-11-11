@@ -1,4 +1,4 @@
-import type { CompositionType, Dimensions, Handing, LeafCount } from '../types';
+import type { CompositionType, Dimensions, Handing, LeafCount, OpeningSide } from '../types';
 import { getComposition } from './compositions';
 
 export interface Rect { x: number; y: number; w: number; h: number }
@@ -31,7 +31,22 @@ export interface PreviewLayout {
  * Simplified geometry for the SVG preview (proportional, not a shop drawing).
  * Coordinates are in millimetres, origin at the top-left corner of the frame.
  */
-export function computePreviewLayout(type: CompositionType, leafCount: LeafCount, dims: Dimensions, handing: Handing): PreviewLayout | null {
+export interface PreviewOptions {
+  openingSide?: OpeningSide;
+  /** Real leaf widths of a double door (active / passive), to draw unequal leaves. */
+  leafWidths?: { active: number; passive: number };
+}
+
+/**
+ * Hinge side as seen on the drawing (exterior view, as in forsterpro): DIN is read from
+ * the side towards which the door opens, so an inward-opening door is mirrored.
+ */
+export function hingeSideInView(handing: Handing, openingSide: OpeningSide = 'interieur'): 'gauche' | 'droite' {
+  const dinLeft = handing === 'din_gauche';
+  return dinLeft === (openingSide === 'exterieur') ? 'gauche' : 'droite';
+}
+
+export function computePreviewLayout(type: CompositionType, leafCount: LeafCount, dims: Dimensions, handing: Handing, options: PreviewOptions = {}): PreviewLayout | null {
   const def = getComposition(type);
   const W = dims.totalWidth;
   const H = dims.totalHeight;
@@ -58,12 +73,16 @@ export function computePreviewLayout(type: CompositionType, leafCount: LeafCount
       panels.push({ kind: 'fixe', x: col.x, y: lowerTop, w: col.w, h: lowerH, label: col.kind === 'lat' ? 'Fixe' : 'Châssis fixe' });
       return;
     }
-    const hingeMain: 'gauche' | 'droite' = handing === 'tirant_gauche' ? 'gauche' : 'droite';
+    const hingeMain = hingeSideInView(handing, options.openingSide);
     if (leafCount === 2) {
-      const half = col.w / 2;
-      dividers.push({ x1: col.x + half, y1: lowerTop, x2: col.x + half, y2: H });
-      panels.push({ kind: 'vantail', x: col.x, y: lowerTop, w: half, h: lowerH, hinge: 'gauche', label: hingeMain === 'gauche' ? 'Vantail principal' : 'Vantail secondaire' });
-      panels.push({ kind: 'vantail', x: col.x + half, y: lowerTop, w: half, h: lowerH, hinge: 'droite', label: hingeMain === 'droite' ? 'Vantail principal' : 'Vantail secondaire' });
+      // The active leaf is hinged on the DIN side; both leaves are hinged on the outer jambs.
+      const lw = options.leafWidths;
+      const activeShare = lw && lw.active > 0 && lw.passive > 0 ? lw.active / (lw.active + lw.passive) : 0.5;
+      const leftShare = hingeMain === 'gauche' ? activeShare : 1 - activeShare;
+      const split = col.w * leftShare;
+      dividers.push({ x1: col.x + split, y1: lowerTop, x2: col.x + split, y2: H });
+      panels.push({ kind: 'vantail', x: col.x, y: lowerTop, w: split, h: lowerH, hinge: 'gauche', label: hingeMain === 'gauche' ? 'Vantail principal' : 'Vantail semi-fixe' });
+      panels.push({ kind: 'vantail', x: col.x + split, y: lowerTop, w: col.w - split, h: lowerH, hinge: 'droite', label: hingeMain === 'droite' ? 'Vantail principal' : 'Vantail semi-fixe' });
     } else {
       panels.push({ kind: 'vantail', x: col.x, y: lowerTop, w: col.w, h: lowerH, hinge: hingeMain, label: 'Vantail' });
     }

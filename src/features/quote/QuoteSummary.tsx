@@ -20,7 +20,7 @@ function safeCalculate(values: QuoteFormValues): CalculationResult | { error: st
 
 export function QuoteSummary({ values }: { values: QuoteFormValues }) {
   const def = getComposition(values.composition.type);
-  const fields = visibleDimensionFields(values.composition.type, values.composition.leafCount);
+  const fields = visibleDimensionFields(values.composition.type, values.composition.leafCount, values.dimensions);
   const result = safeCalculate(values);
   const optionLabel = (field: (typeof OPTION_LISTS)[number]['field'], value: string) =>
     OPTION_LISTS.find((l) => l.field === field)?.choices.find((c) => c.value === value)?.label ?? (value || '—');
@@ -43,11 +43,16 @@ export function QuoteSummary({ values }: { values: QuoteFormValues }) {
           <h2 id="sum-compo">Composition et dimensions</h2>
           <dl className="kv">
             <dt>Composition</dt><dd>{compositionLabel(values)}</dd>
-            {fields.filter((f) => f !== 'mainLeafWidth' && f !== 'secondaryLeafWidth').map((f) => (<FragmentRow key={f} label={DIMENSION_LABELS[f]} value={formatMm(values.dimensions[f])} />))}
+            {fields.filter((f) => !['mainLeafWidth', 'secondaryLeafWidth', 'clearPassage', 'activeClearPassage'].includes(f)).map((f) => (<FragmentRow key={f} label={DIMENSION_LABELS[f]} value={formatMm(values.dimensions[f])} />))}
             {'geometry' in result && result.geometry && (
               <>
                 <dt>Passage dormant (calculé)</dt><dd>{formatMm(result.geometry.doorFrameWidthMm)} × {formatMm(result.geometry.doorZoneHeightMm)}</dd>
-                <dt>Vantail{result.geometry.leafCount === 2 ? 's (chacun)' : ''} (calculé)</dt><dd>{formatMm(result.geometry.leafWidthMm)} × {formatMm(result.geometry.leafHeightMm)}</dd>
+                <dt>Passage libre (90°)</dt><dd>{formatMm(result.geometry.clearPassageMm)}{result.geometry.leafCount === 2 && <span className="sub">vantail principal : {formatMm(result.geometry.activeClearPassageMm)}</span>}</dd>
+                <dt>Passage libre en hauteur</dt><dd>{formatMm(result.geometry.clearHeightMm)}</dd>
+                <dt>{result.geometry.leafCount === 2 ? 'Vantail principal (calculé)' : 'Vantail (calculé)'}</dt><dd>{formatMm(result.geometry.leafWidthMm)} × {formatMm(result.geometry.leafHeightMm)}</dd>
+                {result.geometry.secondaryLeafWidthMm !== undefined && (
+                  <><dt>Vantail semi-fixe (calculé)</dt><dd>{formatMm(result.geometry.secondaryLeafWidthMm)} × {formatMm(result.geometry.leafHeightMm)}</dd></>
+                )}
                 {result.profileWeightKg !== undefined && (
                   <><dt>Poids des profilés (calculé)</dt><dd>{new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 }).format(result.profileWeightKg)} kg <span className="sub">hors joints, remplissage et quincaillerie</span></dd></>
                 )}
@@ -63,7 +68,7 @@ export function QuoteSummary({ values }: { values: QuoteFormValues }) {
           <h2 id="sum-opt">Options techniques</h2>
           <dl className="kv">
             <dt>Ouverture</dt><dd>{values.options.openingSide === 'interieur' ? 'Intérieure' : 'Extérieure'}</dd>
-            <dt>Tirant</dt><dd>{values.options.handing === 'tirant_gauche' ? 'Tirant gauche' : 'Tirant droit'}</dd>
+            <dt>Sens d’ouverture</dt><dd>{values.options.handing === 'din_gauche' ? 'DIN gauche' : 'DIN droite'}</dd>
             {OPTION_LISTS.map((l) => (<FragmentRow key={l.field} label={l.label} value={optionLabel(l.field, values.options[l.field])} />))}
             <dt>Autres accessoires</dt><dd>{values.options.otherAccessories || '—'}</dd>
           </dl>
@@ -72,7 +77,14 @@ export function QuoteSummary({ values }: { values: QuoteFormValues }) {
 
       <section className="card" aria-labelledby="sum-preview">
         <h2 id="sum-preview">Schéma simplifié</h2>
-        <CompositionPreview type={values.composition.type} leafCount={values.composition.leafCount} dimensions={values.dimensions} handing={values.options.handing} />
+        <CompositionPreview
+          type={values.composition.type}
+          leafCount={values.composition.leafCount}
+          dimensions={values.dimensions}
+          handing={values.options.handing}
+          openingSide={values.options.openingSide}
+          leafWidths={'geometry' in result && result.geometry?.secondaryLeafWidthMm !== undefined ? { active: result.geometry.leafWidthMm, passive: result.geometry.secondaryLeafWidthMm } : undefined}
+        />
       </section>
 
       {'error' in result ? (

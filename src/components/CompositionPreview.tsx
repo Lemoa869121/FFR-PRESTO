@@ -1,4 +1,4 @@
-import type { CompositionType, Dimensions, Handing, LeafCount } from '../types';
+import type { CompositionType, Dimensions, Handing, LeafCount, OpeningSide } from '../types';
 import { computePreviewLayout, type PreviewDimension } from '../domain/previewLayout';
 import { formatMm } from '../utils/format';
 
@@ -7,6 +7,8 @@ interface Props {
   leafCount: LeafCount;
   dimensions: Dimensions;
   handing: Handing;
+  openingSide?: OpeningSide;
+  leafWidths?: { active: number; passive: number };
   title?: string;
 }
 
@@ -14,8 +16,8 @@ function fmt(v: number): string {
   return formatMm(v).replace(' mm', '');
 }
 
-export function CompositionPreview({ type, leafCount, dimensions, handing, title = 'Schéma simplifié de la composition' }: Props) {
-  const layout = computePreviewLayout(type, leafCount, dimensions, handing);
+export function CompositionPreview({ type, leafCount, dimensions, handing, openingSide, leafWidths, title = 'Schéma simplifié de la composition' }: Props) {
+  const layout = computePreviewLayout(type, leafCount, dimensions, handing, { openingSide, leafWidths });
   if (!layout) {
     return <p className="preview-empty">Saisissez des dimensions cohérentes pour afficher le schéma.</p>;
   }
@@ -73,13 +75,21 @@ export function CompositionPreview({ type, leafCount, dimensions, handing, title
               strokeWidth={frame * 0.5}
             />
             {p.kind === 'vantail' && p.hinge && (
+              <g className="preview-hinges">
+                {[0.12, 0.5, 0.88].map((t) => (
+                  <rect key={t} x={p.hinge === 'gauche' ? p.x - frame * 0.2 : p.x + p.w - frame * 0.8} y={p.y + p.h * t - unit * 0.9} width={frame} height={unit * 1.8} />
+                ))}
+              </g>
+            )}
+            {p.kind === 'vantail' && p.hinge && (
               <polyline
                 className="preview-swing"
                 strokeWidth={unit * 0.18}
                 points={
+                  // Base of the triangle on the hinge side, apex on the opening (lock) side.
                   p.hinge === 'gauche'
-                    ? `${p.x + p.w - frame},${p.y + frame} ${p.x + frame},${p.y + p.h / 2} ${p.x + p.w - frame},${p.y + p.h}`
-                    : `${p.x + frame},${p.y + frame} ${p.x + p.w - frame},${p.y + p.h / 2} ${p.x + frame},${p.y + p.h}`
+                    ? `${p.x + frame},${p.y + frame} ${p.x + p.w - frame},${p.y + p.h / 2} ${p.x + frame},${p.y + p.h}`
+                    : `${p.x + p.w - frame},${p.y + frame} ${p.x + frame},${p.y + p.h / 2} ${p.x + p.w - frame},${p.y + p.h}`
                 }
               />
             )}
@@ -93,7 +103,7 @@ export function CompositionPreview({ type, leafCount, dimensions, handing, title
         ))}
         {layout.dimensions.map(renderDim)}
       </svg>
-      <figcaption>Vue extérieure — proportions respectées, schéma non coté pour la fabrication.</figcaption>
+      <figcaption>Vue extérieure — base des triangles côté paumelles. Proportions respectées, schéma non coté pour la fabrication.</figcaption>
     </figure>
   );
 }
