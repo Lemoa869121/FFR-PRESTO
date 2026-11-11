@@ -47,12 +47,19 @@ export interface Dimensions {
   transomHeight?: number;
   /** Gap between leaf and finished floor (doors only). */
   floorGap?: number;
+  /** Clear passage with all leaves open at 90° ("passage libre"). */
+  clearPassage?: number;
+  /** Clear passage of the active leaf of a double door. */
+  activeClearPassage?: number;
+  /** Double door without fixed part: sized by total width or by clear passage. */
+  sizingMode?: 'largeur_totale' | 'passage_libre';
   leftSideWidth?: number;
   rightSideWidth?: number;
 }
 
 export type OpeningSide = 'interieur' | 'exterieur';
-export type Handing = 'tirant_gauche' | 'tirant_droit';
+/** DIN handing as written by Forster ("Sens d'ouverture DIN L / DIN R"). */
+export type Handing = 'din_gauche' | 'din_droite';
 
 export interface TechnicalOptions {
   system: string;
@@ -192,7 +199,20 @@ export interface CalculationResult {
   /** Weight of profiles and glazing beads (manual kg/m), excluding gaskets, infill and hardware. */
   profileWeightKg?: number;
   /** Main dimensions derived by the rules (mm). */
-  geometry?: { doorFrameWidthMm: number; doorZoneHeightMm: number; leafWidthMm: number; leafHeightMm: number; leafCount: LeafCount };
+  geometry?: {
+    doorFrameWidthMm: number;
+    doorZoneHeightMm: number;
+    leafWidthMm: number;
+    secondaryLeafWidthMm?: number;
+    leafHeightMm: number;
+    leafCount: LeafCount;
+    totalWidthMm: number;
+    leftSideWidthMm: number;
+    rightSideWidthMm: number;
+    clearPassageMm: number;
+    activeClearPassageMm: number;
+    clearHeightMm: number;
+  };
 }
 
 /** Mapping between a column of an imported spreadsheet and a target field. */

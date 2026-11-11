@@ -34,6 +34,13 @@ export function generateId(): string {
   return `q-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+/** Upgrades quotes saved by earlier versions (handing was stored as "tirant_gauche" / "tirant_droit"). */
+export function migrateQuote(quote: Quote): Quote {
+  const legacy: Record<string, Quote['options']['handing']> = { tirant_gauche: 'din_gauche', tirant_droit: 'din_droite' };
+  const handing = legacy[quote.options.handing as string];
+  return handing ? { ...quote, options: { ...quote.options, handing } } : quote;
+}
+
 export class QuoteRepository {
   private readonly store: KeyValueStore;
 
@@ -47,7 +54,7 @@ export class QuoteRepository {
     try {
       const parsed: unknown = JSON.parse(raw);
       if (!Array.isArray(parsed)) throw new StorageError('Format de stockage inattendu.');
-      return (parsed as Quote[]).slice().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+      return (parsed as Quote[]).map(migrateQuote).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
     } catch (error) {
       if (error instanceof StorageError) throw error;
       throw new StorageError('Les chiffrages enregistrés sont illisibles (données locales corrompues).');
