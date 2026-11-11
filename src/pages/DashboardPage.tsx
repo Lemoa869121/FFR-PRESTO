@@ -86,6 +86,7 @@ export function DashboardPage({ repository }: { repository: QuoteRepository }) {
                   <td className="num">{formatEuro(q.totalPrice)}</td>
                   <td><span className={`badge badge--${q.status}`}>{STATUS_LABELS[q.status]}</span></td>
                   <td className="actions">
+                    <div className="actions__group">
                     <button type="button" className="btn btn--small" onClick={() => navigate({ name: 'edit', id: q.id })} aria-label={`Ouvrir ${q.project.name}`}>Ouvrir</button>
                     <button type="button" className="btn btn--small" onClick={() => run(() => repository.duplicate(q.id), `Chiffrage « ${q.project.name} » dupliqué.`)} aria-label={`Dupliquer ${q.project.name}`}>Dupliquer</button>
                     <button
@@ -100,6 +101,7 @@ export function DashboardPage({ repository }: { repository: QuoteRepository }) {
                     >
                       Supprimer
                     </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -142,7 +142,8 @@ a { color: var(--fo-blue2); }
 .btn--small { padding: 3px var(--s2); font-size: 0.8rem; border-radius: var(--radius-sm); }
 .btn--danger { color: var(--alert-ink); }
 .btn--danger:hover { background: var(--alert-bg); border-color: var(--alert-border); }
-.actions { white-space: nowrap; display: flex; gap: var(--s1); }
+.actions { white-space: nowrap; }
+.actions__group { display: flex; gap: var(--s1); }
 
 /* ── Tableaux ─────────────────────────────────────────────────────────────── */
 .table-wrap { overflow-x: auto; border: 1px solid var(--fo-grey); border-radius: var(--radius-lg); background: var(--fo-white); margin-bottom: var(--s5); }
@@ -265,3 +266,4 @@ details summary { cursor: pointer; color: var(--fo-blue2); font-weight: 500; }
 
 /* Tableau déjà sous un bandeau de carte : légende en gris pour éviter deux bandeaux bleus. */
 .card .data-table caption { background: var(--fo-grey-50); color: var(--fo-ink); }
+.kv .tag { white-space: normal; margin-left: 0; }
