@@ -1,11 +1,13 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { QuoteRepository } from '../storage/quoteStorage';
 import { useRoute, routeToHash, type Route } from './router';
 import { DashboardPage } from '../pages/DashboardPage';
 import { QuoteWizardPage } from '../pages/QuoteWizardPage';
 import { CuttingListPage } from '../pages/CuttingListPage';
-import { ImportPage } from '../pages/ImportPage';
 import { RulesPage } from '../pages/RulesPage';
+
+// The import screen bundles SheetJS: load it only when opened.
+const ImportPage = lazy(() => import('../pages/ImportPage').then((m) => ({ default: m.ImportPage })));
 
 const NAV: { label: string; route: Route }[] = [
   { label: 'Tableau de bord', route: { name: 'dashboard' } },
@@ -51,7 +53,11 @@ export function App() {
         {route.name === 'new' && <QuoteWizardPage key="new" repository={repository} />}
         {route.name === 'edit' && <QuoteWizardPage key={route.id} repository={repository} quoteId={route.id} />}
         {route.name === 'cutting' && <CuttingListPage repository={repository} quoteId={route.id} />}
-        {route.name === 'import' && <ImportPage />}
+        {route.name === 'import' && (
+          <Suspense fallback={<p role="status">Chargement du module d’import…</p>}>
+            <ImportPage />
+          </Suspense>
+        )}
         {route.name === 'rules' && <RulesPage />}
       </main>
       <footer className="app-footer">
