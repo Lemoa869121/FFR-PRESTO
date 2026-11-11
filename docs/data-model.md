@@ -42,6 +42,29 @@ Chaque `CuttingListItem.trace` contient : `ruleId`, `ruleStatus`, `referenceSour
 | `MaterialCategory` | `profiles`, `renforts`, `joints`, `vitrage`, `panneaux`, `quincaillerie`, `accessoires`, `consommables` |
 | `ImportMapping` | Correspondance entre colonnes d’un fichier importé et champs cibles : `sourceFile`, `sheet`, `headerRow`, `columns[]` |
 
+## Données importées forsterpro
+
+Définies dans [`src/imports/forsterpro/types.ts`](../src/imports/forsterpro/types.ts) :
+
+| Type | Contenu |
+|---|---|
+| `ForsterproDocument` | identifiant, fichier, SHA-256, affaire, date d'édition, positions, plans de coupe, chutes, récapitulatif, lignes non reconnues (vide) |
+| `ImportedPosition` | id (« Int 003 »), quantité, série, taille brute et parsée, drainage, matériau, avertissements source, éléments |
+| `ImportedElement` | index brut (« 1,3 »), champs, libellé, type (`dormant`, `porte`, `fixe`), vantaux, raccord au sol, jeu, lignes |
+| `ImportedBomLine` | groupe, référence, description, unité, quantité brute et expression (« 1*2 »), total, longueur, Max/Dim., longueur après délardage, coupe, orientation, remplissage, source |
+| `PdfLineRef` | page PDF, page imprimée, ligne |
+| `ImportedCuttingPlan` | référence, barres, longueur de barre, section, chute, paramètres, motifs de coupe |
+| `CatalogueEntry` | référence, description, groupe, unité, section, matériau, 1re occurrence (position, page, ligne) |
+
+## Règles Presto
+
+| Type | Contenu |
+|---|---|
+| `PrestoConfig` | ouverture, vantaux, DIN, W, H, largeurs latérales, hauteur d'imposte |
+| `PrestoRule` | id, domaine, titre, formule, statut, valeurs observées, note |
+| `GeneratedLine` | groupe, référence, quantité, unité, longueur, longueur après délardage, coupe, côté, remplissage, `ruleId` |
+| `ReferencePosition` | id, page, taille brute, `PrestoConfig` |
+
 ## Stockage local
 
 Clé `forstercalc.quotes.v1` du `localStorage`, contenant un tableau JSON de `Quote`. Une donnée illisible déclenche une `StorageError` affichée à l’utilisateur ; elle n’est jamais écrasée silencieusement.
