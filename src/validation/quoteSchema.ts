@@ -35,6 +35,7 @@ export const dimensionsSchema = z.object({
   mainLeafWidth: optionalMm,
   secondaryLeafWidth: optionalMm,
   transomHeight: optionalMm,
+  floorGap: z.number({ error: 'Valeur numérique attendue (mm).' }).min(0, 'Valeur positive attendue.').max(100, 'Valeur hors plage (mm).').optional(),
   leftSideWidth: optionalMm,
   rightSideWidth: optionalMm,
 });

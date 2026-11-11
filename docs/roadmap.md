@@ -6,6 +6,7 @@
 |---|---|---|
 | 1 | Interface fonctionnelle : tableau de bord, assistant en 5 étapes, schéma SVG, stockage local, liste de débit (structure), import (aperçu) | ✅ livrée (PR « initial interface ») |
 | 2 | Intégration du dossier de fabrication forsterpro « FFR Presto » : données sources tracées, 30 règles Presto dérivées et vérifiées sur 32 positions, moteur, tests | ✅ livrée (PR « forsterpro rules ») |
+| 2 ter | Guide de mise en œuvre presto 918301 : confirmations, contrôles explicites, poids, unités de vente | ✅ livrée (PR « guide de mise en œuvre ») |
 | 2 bis | Validation Forster des règles « à valider » (P-ACC-01 boutons, P-ACC-02 douilles, P-CFG-01 tirant ↔ DIN) et des extrapolations | en attente de Forster |
 | 3 | Import des tarifs Excel → `PriceBook` tracé, totaux en euros | en attente des fichiers tarifaires |
 | 4 | Catalogue réel des options (vitrages, finitions, serrures…) | en attente des données |

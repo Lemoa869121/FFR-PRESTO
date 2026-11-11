@@ -35,6 +35,9 @@ const BASE: { suffix: string; intPage: number; extPage: number; size: string; le
   { suffix: '012', intPage: 66, extPage: 137, size: '3.000 x 2.500 mm', leaves: 2, L: 482, R: 482, W: 3000, H: 2500, din: 'L' },
 ];
 
+/** Floor gap of every position of the file ("Jeu de porte : 10 mm"). */
+export const REFERENCE_FLOOR_GAP = 10;
+
 /** Door zone height of every position of the file (H − T). */
 export const REFERENCE_DOOR_ZONE_HEIGHT = 2170;
 
@@ -52,6 +55,7 @@ export const REFERENCE_POSITIONS: readonly ReferencePosition[] = (['interieur', 
       leftSideWidth: b.L,
       rightSideWidth: b.R,
       transomHeight: b.H - REFERENCE_DOOR_ZONE_HEIGHT,
+      floorGap: REFERENCE_FLOOR_GAP,
     },
   })),
 );
@@ -60,7 +64,7 @@ const same = (a: PrestoConfig, b: PrestoConfig) =>
   a.openingSide === b.openingSide && a.leafCount === b.leafCount && a.din === b.din &&
   Math.abs(a.totalWidth - b.totalWidth) < 1e-6 && Math.abs(a.totalHeight - b.totalHeight) < 1e-6 &&
   Math.abs(a.leftSideWidth - b.leftSideWidth) < 1e-6 && Math.abs(a.rightSideWidth - b.rightSideWidth) < 1e-6 &&
-  Math.abs(a.transomHeight - b.transomHeight) < 1e-6;
+  Math.abs(a.transomHeight - b.transomHeight) < 1e-6 && Math.abs(a.floorGap - b.floorGap) < 1e-6;
 
 export function findReferencePosition(config: PrestoConfig): ReferencePosition | undefined {
   return REFERENCE_POSITIONS.find((p) => same(p.config, config));
@@ -72,4 +76,5 @@ export const OBSERVED_DOMAIN = {
   doorZoneHeight: [REFERENCE_DOOR_ZONE_HEIGHT],
   transomHeight: [330],
   sideWidth: { 1: [963.5], 2: [482] } as Record<1 | 2, number[]>,
+  floorGap: [REFERENCE_FLOOR_GAP],
 };

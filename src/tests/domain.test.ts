@@ -37,7 +37,7 @@ describe('visibleDimensionFields', () => {
   });
   it('shows transom and both side widths for the full composition', () => {
     expect(visibleDimensionFields('porte_imposte_laterales', 1)).toEqual(
-      ['totalWidth', 'totalHeight', 'mainLeafWidth', 'transomHeight', 'leftSideWidth', 'rightSideWidth'],
+      ['totalWidth', 'totalHeight', 'mainLeafWidth', 'floorGap', 'transomHeight', 'leftSideWidth', 'rightSideWidth'],
     );
   });
   it('shows only the right side for "imposte + partie latérale droite"', () => {

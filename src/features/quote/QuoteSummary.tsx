@@ -48,6 +48,9 @@ export function QuoteSummary({ values }: { values: QuoteFormValues }) {
               <>
                 <dt>Passage dormant (calculé)</dt><dd>{formatMm(result.geometry.doorFrameWidthMm)} × {formatMm(result.geometry.doorZoneHeightMm)}</dd>
                 <dt>Vantail{result.geometry.leafCount === 2 ? 's (chacun)' : ''} (calculé)</dt><dd>{formatMm(result.geometry.leafWidthMm)} × {formatMm(result.geometry.leafHeightMm)}</dd>
+                {result.profileWeightKg !== undefined && (
+                  <><dt>Poids des profilés (calculé)</dt><dd>{new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 }).format(result.profileWeightKg)} kg <span className="sub">hors joints, remplissage et quincaillerie</span></dd></>
+                )}
               </>
             )}
             <dt>Position de référence</dt>

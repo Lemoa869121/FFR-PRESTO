@@ -11,6 +11,8 @@ export interface PrestoConfig {
   rightSideWidth: number;
   /** Height of the transom zone (outer jamb piece above the door); 0 = no transom. */
   transomHeight: number;
+  /** Gap between the leaf and the finished floor (P-CFG-03); 10 mm in the FFR Presto file. */
+  floorGap: number;
 }
 
 export type PrestoElementKind = 'dormant' | 'porte' | 'fixe';

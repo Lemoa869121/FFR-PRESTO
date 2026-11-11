@@ -3,30 +3,36 @@ import type { RuleStatus } from '../../types';
 /**
  * Cutting / quantity rules of the Forster Presto system.
  *
- * Source: forsterpro manufacturing file "FFR Presto" (32 positions, see
- * data/sources/ffr-presto). The file contains results, not formulas: every rule
- * below was DERIVED from those results and is checked by the test suite against
- * all 32 positions (src/tests/prestoRules.test.ts). Rules that several formulas
- * explain equally well, or that rely on an unusual constant, are "a_valider".
+ * Sources:
+ * - forsterpro manufacturing file "FFR Presto" (32 positions, data/sources/ffr-presto):
+ *   results, not formulas — rules are DERIVED from them and checked by the test suite
+ *   against all 32 positions (src/tests/prestoRules.test.ts);
+ * - Forster presto processing manual 918301, edition 01/2021 (VP page codes): rules or
+ *   values written explicitly are marked "explicite" with their page.
+ * Rules that several formulas explain equally well, or that rely on an unusual
+ * constant, are "a_valider".
  *
  * Notation: W total width, H total height, L / R left / right fixed part width,
  * T transom height, Wd = W − L − R (door frame width), Hd = H − T (door zone height).
  */
 export interface PrestoRule {
   id: string;
-  domain: 'Configuration' | 'Dormant' | 'Vantail' | 'Vitrage' | 'Quincaillerie' | 'Accessoires' | 'Joints';
+  domain: 'Configuration' | 'Dormant' | 'Vantail' | 'Vitrage' | 'Quincaillerie' | 'Accessoires' | 'Joints' | 'Contrôles';
   title: string;
   formula: string;
   status: Extract<RuleStatus, 'derivee' | 'a_valider' | 'explicite'>;
   /** Values of the parameters actually observed in the source document. */
   observedOn: string;
   note?: string;
+  /** Documents supporting the rule (manual page codes, FFR Presto file). */
+  sources?: string[];
 }
 
 const ALL = '32 positions (Int / Ext 001 à 012)';
 
 export const PRESTO_RULES: readonly PrestoRule[] = [
   { id: 'P-CFG-01', domain: 'Configuration', title: 'Correspondance tirant ↔ DIN', formula: 'Tirant gauche = DIN L ; tirant droit = DIN R', status: 'a_valider', observedOn: 'DIN L et DIN R présents dans le dossier', note: 'Libellés forsterpro « Sens d’ouverture DIN L / R » ; correspondance avec le vocabulaire « tirant » à confirmer.' },
+  { id: 'P-CFG-03', domain: 'Configuration', title: 'Jeu sous porte (sol fini)', formula: 'Paramètre saisi ; 10 mm par défaut', status: 'explicite', observedOn: '10 mm dans le dossier', note: 'Cote « variable » sur les plans du système ; « Jeu de porte : 10 mm » dans le dossier.', sources: ['Guide presto VP 3.5.32 (p. 242)', 'Dossier FFR Presto (32 positions)'] },
   { id: 'P-CFG-02', domain: 'Configuration', title: 'Ouverture intérieure / extérieure', formula: 'Ouverture intérieure = variante « Int » ; extérieure = variante « Ext »', status: 'explicite', observedOn: ALL, note: 'Confirmé par le demandeur le 11/11/2026.' },
 
   { id: 'P-DOR-01', domain: 'Dormant', title: 'Montant extérieur côté partie fixe', formula: '32.851, L = H, coupe 135° - 135°', status: 'derivee', observedOn: 'H = 2 170 et 2 500' },
@@ -44,10 +50,11 @@ export const PRESTO_RULES: readonly PrestoRule[] = [
   { id: 'P-JNT-02', domain: 'Joints', title: 'Joint EPDM du vantail (905306)', formula: '1,03 × (2 × hauteur vantail + largeur vantail) / 1 000 par vantail, arrondi à 0,01 m', status: 'derivee', observedOn: 'vantail 993 × 2 120' },
   { id: 'P-JNT-03', domain: 'Joints', title: 'Joints de vitrage 905312 et 905317', formula: 'Chacun : 1,03 × 2 × (largeur clair + hauteur clair − 40) / 1 000 par champ, arrondi à 0,01 m', status: 'derivee', observedOn: '7 tailles de champ différentes' },
 
-  { id: 'P-VAN-01', domain: 'Vantail', title: 'Dimensions du vantail', formula: 'Porte simple : largeur = Wd − 80 ; porte double : largeur = (Wd − 50) / 2 par vantail ; hauteur = Hd − 50', status: 'derivee', observedOn: 'Wd = 1 073 (simple), 2 036 (double), Hd = 2 170', note: 'Largeur et hauteur de porte constantes dans le dossier : écarts vérifiés sur une seule valeur.' },
+  { id: 'P-VAN-01', domain: 'Vantail', title: 'Dimensions du vantail', formula: 'Hauteur = Hd − (36 + 4) − jeu sous porte ; porte simple : largeur = Wd − 2 × (36 + 4)', status: 'explicite', observedOn: 'Wd = 1 073, Hd = 2 170, jeu 10 (dossier)', note: 'Recouvrement du dormant 36 mm et jeu de feuillure 4 mm en tête et en montants (coupes B-B et C-C).', sources: ['Guide presto VP 3.5.32 (p. 242)', 'Guide presto VP 3.5.33 (p. 243)', 'Dossier FFR Presto (32 positions)'] },
+  { id: 'P-VAN-05', domain: 'Vantail', title: 'Largeur des vantaux d’une porte double', formula: '(Wd − 50) / 2 par vantail', status: 'derivee', observedOn: 'Wd = 2 036', note: 'Recouvrement au battement non coté lisiblement dans le guide (VP 3.5.36).', sources: ['Dossier FFR Presto (32 positions)'] },
   { id: 'P-VAN-02', domain: 'Vantail', title: 'Montants et traverse haute du vantail', formula: 'Int : 32.805, 135° - 135° ; Ext : 32.803, 45° - 45° ; montants L = hauteur vantail, traverse haute L = largeur vantail', status: 'derivee', observedOn: ALL, note: 'Échange 32.803 ↔ 32.805 entre Int et Ext confirmé par le demandeur.' },
   { id: 'P-VAN-03', domain: 'Vantail', title: 'Traverse basse du vantail', formula: '32.855, L = largeur vantail, 45° - 45°', status: 'derivee', observedOn: ALL },
-  { id: 'P-VAN-04', domain: 'Vantail', title: 'Montant de battement (porte double)', formula: 'Int : 32.803, 45° - 45° ; Ext : 32.805, 135° - 135° ; L = hauteur vantail ; après délardage = hauteur − 34 ; sur le montant D du 1er vantail si (Int et DIN L) ou (Ext et DIN R), sinon sur le montant G du 2e vantail', status: 'derivee', observedOn: '16 portes doubles' },
+  { id: 'P-VAN-04', domain: 'Vantail', title: 'Montant de battement (porte double)', formula: 'Int : 32.803, 45° - 45° ; Ext : 32.805, 135° - 135° ; L = hauteur vantail ; après délardage = hauteur − 34 ; sur le montant D du 1er vantail si (Int et DIN L) ou (Ext et DIN R), sinon sur le montant G du 2e vantail', status: 'derivee', observedOn: '16 portes doubles', note: 'Cote de 34 mm au battement confirmée par le guide.', sources: ['Guide presto VP 3.6.10 (p. 276)', 'Dossier FFR Presto (32 positions)'] },
 
   { id: 'P-VIT-01', domain: 'Vitrage', title: 'Clair de vitrage d’un vantail', formula: 'Largeur = largeur vantail − 140 ; hauteur = hauteur vantail − 180', status: 'derivee', observedOn: 'vantail 993 × 2 120' },
   { id: 'P-VIT-02', domain: 'Vitrage', title: 'Champs fixes et leur clair', formula: 'Un champ par colonne latérale en zone porte et, avec imposte, un champ par colonne en zone d’imposte ; largeur = largeur latérale − 50 (colonne fixe) ou Wd − 100 (au-dessus de la porte) ; hauteur = Hd − 140 (zone porte) ou T − 90 (zone d’imposte)', status: 'derivee', observedOn: ALL },
@@ -58,10 +65,15 @@ export const PRESTO_RULES: readonly PrestoRule[] = [
   { id: 'P-QUI-02', domain: 'Quincaillerie', title: 'Ferrures de porte', formula: 'FFR019FND, FFR042FND, FFR046FND : 1 de chaque par porte', status: 'derivee', observedOn: ALL },
   { id: 'P-QUI-03', domain: 'Quincaillerie', title: 'Ferrures de porte double', formula: 'FFR045FND, FFR049FND, FFR050FND : 1 de chaque', status: 'derivee', observedOn: '16 portes doubles' },
 
-  { id: 'P-ACC-01', domain: 'Accessoires', title: 'Boutons autotaraudeurs (906579)', formula: 'Par champ : 2 × n(largeur clair) + 2 × n(hauteur clair), n(l) = max(3 ; ⌈l / 277⌉)', status: 'a_valider', observedOn: '7 tailles de champ', note: 'Seul pas entier compatible avec les données ; la règle Forster réelle est à confirmer.' },
+  { id: 'P-ACC-01', domain: 'Accessoires', title: 'Boutons autotaraudeurs (906579)', formula: 'Par champ : 2 × n(largeur clair) + 2 × n(hauteur clair), n(l) = max(3 ; ⌈l / 277⌉)', status: 'a_valider', observedOn: '7 tailles de champ', note: 'Le guide impose au plus 70 mm des extrémités et 300 mm d’entraxe : les quantités du dossier respectent ce minimum mais en posent davantage ; la répartition exacte de forsterpro n’est pas décrite.', sources: ['Guide presto VP 3.6.14 (p. 280)', 'Dossier FFR Presto (32 positions)'] },
   { id: 'P-ACC-02', domain: 'Accessoires', title: 'Douilles d’écoulement (900100)', formula: 'Par champ : ⌊largeur clair / 400⌋ + 1 (fixes comptés dans le dormant, vantaux dans la porte)', status: 'a_valider', observedOn: 'largeurs de clair 432 à 1 936', note: '⌈largeur / 400⌉ donne les mêmes résultats sur le dossier ; les deux formules diffèrent pour un multiple exact de 400.' },
-  { id: 'P-ACC-03', domain: 'Accessoires', title: 'Pièces de remplissage 916320 / 916322', formula: 'Porte simple : 1 / 1 ; porte double DIN L : 3 / 2 ; DIN R : 2 / 3', status: 'derivee', observedOn: ALL },
-  { id: 'P-ACC-04', domain: 'Accessoires', title: 'Pièces d’étanchéité de porte double', formula: 'DIN L : 905703 × 2 ; DIN R : 905702 × 2', status: 'derivee', observedOn: '16 portes doubles' },
+  { id: 'P-ACC-03', domain: 'Accessoires', title: 'Pièces de remplissage 916320 / 916322', formula: 'Porte simple : 1 / 1 ; porte double DIN L : 3 / 2 ; DIN R : 2 / 3', status: 'derivee', observedOn: ALL, note: 'Emplacements décrits par le guide ; quantités tirées du dossier.', sources: ['Guide presto VP 3.6.10 (p. 276)', 'Dossier FFR Presto (32 positions)'] },
+  { id: 'P-ACC-04', domain: 'Accessoires', title: 'Pièces d’étanchéité de porte double', formula: 'DIN L : 905703 × 2 ; DIN R : 905702 × 2', status: 'explicite', observedOn: '16 portes doubles', note: 'Correspondance DIN écrite dans le guide (« Dichtungsstück oben, DIN links 905703 / DIN rechts 905702 ») ; quantité 2 tirée du dossier.', sources: ['Guide presto VP 3.4.9 (p. 203)', 'Dossier FFR Presto (32 positions)'] },
+
+  { id: 'P-CTL-01', domain: 'Contrôles', title: 'Dimension minimale', formula: 'Dormant et vantail ≥ 120 mm (bloquant)', status: 'explicite', observedOn: '—', sources: ['Guide presto VP 3.1.1 (p. 53)'] },
+  { id: 'P-CTL-02', domain: 'Contrôles', title: 'Charge admissible des paumelles 907662', formula: 'Table H 1 800 à 3 000 × B 600 à 1 400 mm ; hors table : alerte', status: 'explicite', observedOn: '—', note: 'Le poids du vantail n’est pas calculé tant que le remplissage n’est pas défini.', sources: ['Guide presto VP 3.3.114 (p. 178)'] },
+  { id: 'P-CTL-03', domain: 'Contrôles', title: 'Tolérances de coupe', formula: 'Dormant +1 / −0 mm ; vantail +0 / −1 mm', status: 'explicite', observedOn: '—', sources: ['Guide presto VP 1.3.3 (p. 27)'] },
+  { id: 'P-CTL-04', domain: 'Contrôles', title: 'Poids des profilés et longueur de barre', formula: 'Poids = kg/m × longueur × quantité ; barres de 6 000 mm', status: 'explicite', observedOn: '7 références', note: 'Hors joints, remplissage et quincaillerie.', sources: ['Guide presto VP 3.2.1, 3.2.2, 3.2.4 (p. 59, 60, 62)'] },
 ];
 
 export function getRule(id: string): PrestoRule {

@@ -30,7 +30,7 @@ function defaultValues(): QuoteFormValues {
   return {
     project: { name: '', quoteReference: '', clientName: '', description: '', createdOn: todayIso(), quantity: 1 },
     composition: { type: 'porte_simple', leafCount: 1 },
-    dimensions: { totalWidth: 1073, totalHeight: 2170 },
+    dimensions: { totalWidth: 1073, totalHeight: 2170, floorGap: 10 },
     options: { ...DEFAULT_OPTIONS },
   };
 }
@@ -92,6 +92,7 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
     fill('transomHeight', def.hasTransom);
     fill('leftSideWidth', def.hasLeftSide);
     fill('rightSideWidth', def.hasRightSide);
+    if (def.hasDoor && dims.floorGap === undefined) setValue('dimensions.floorGap', 10);
   };
 
   const applyPreset = (id: string) => {
@@ -99,7 +100,7 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
     if (!preset) return;
     setValue('composition.type', preset.compositionType, { shouldValidate: true });
     setValue('composition.leafCount', preset.leafCount, { shouldValidate: true });
-    setValue('dimensions', { ...preset.dimensions }, { shouldValidate: true });
+    setValue('dimensions', { ...preset.dimensions, floorGap: 10 }, { shouldValidate: true });
     setValue('options.openingSide', preset.openingSide);
     setValue('options.handing', preset.handing);
   };
@@ -221,7 +222,7 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
                     value={derivedValue(field)}
                     onChange={() => undefined}
                     readOnly
-                    hint="Calculée par la règle P-VAN-01 (dérivée du dossier)"
+                    hint={field === 'mainLeafWidth' && values.composition.leafCount === 1 ? 'Calculée : règle P-VAN-01 (guide presto VP 3.5.33)' : 'Calculée : règle P-VAN-05 (dérivée du dossier FFR Presto)'}
                   />
                 ) : (
                   <Controller
@@ -237,7 +238,9 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
                         error={fieldState.error?.message}
                         hint={field === 'transomHeight' || field === 'leftSideWidth' || field === 'rightSideWidth'
                           ? `Valeur du dossier FFR Presto : ${String(referenceDefault(field, values.composition.leafCount)).replace('.', ',')} mm`
-                          : undefined}
+                          : field === 'floorGap'
+                            ? 'Variable selon le guide presto (VP 3.5.32) ; dossier FFR Presto : 10 mm'
+                            : undefined}
                       />
                     )}
                   />

@@ -2,7 +2,7 @@ import type { ValidationWarning } from '../../types';
 import { getComposition } from '../../domain/compositions';
 import type { CalculationInput } from '../types';
 import type { PrestoConfig } from './types';
-import { OBSERVED_DOMAIN } from './referencePositions';
+import { OBSERVED_DOMAIN, REFERENCE_FLOOR_GAP } from './referencePositions';
 import { formatMm } from '../../utils/format';
 
 export const PRESTO_SYSTEM = 'forster presto/presto XS 50 Standard Aluminium';
@@ -47,6 +47,7 @@ export function prestoConfigFromInput(input: CalculationInput): ConfigResult {
     leftSideWidth: def.hasLeftSide ? d.leftSideWidth ?? 0 : 0,
     rightSideWidth: def.hasRightSide ? d.rightSideWidth ?? 0 : 0,
     transomHeight: def.hasTransom ? d.transomHeight ?? 0 : 0,
+    floorGap: d.floorGap ?? REFERENCE_FLOOR_GAP,
   };
   warnings.push({ code: 'DIN_MAPPING', level: 'info', message: `Tirant ${config.din === 'L' ? 'gauche' : 'droit'} interprété comme DIN ${config.din} (règle P-CFG-01, à valider).` });
 
@@ -57,6 +58,7 @@ export function prestoConfigFromInput(input: CalculationInput): ConfigResult {
   const leaves = config.leafCount;
   if (!OBSERVED_DOMAIN.doorFrameWidth[leaves].includes(Wd)) extrapolated.push(`largeur de passage dormant ${formatMm(Wd)} (dossier : ${list(OBSERVED_DOMAIN.doorFrameWidth[leaves])})`);
   if (!OBSERVED_DOMAIN.doorZoneHeight.includes(Hd)) extrapolated.push(`hauteur de la zone porte ${formatMm(Hd)} (dossier : ${list(OBSERVED_DOMAIN.doorZoneHeight)})`);
+  if (!OBSERVED_DOMAIN.floorGap.includes(config.floorGap)) extrapolated.push(`jeu sous porte ${formatMm(config.floorGap)} (dossier : ${list(OBSERVED_DOMAIN.floorGap)})`);
   if (config.transomHeight > 0 && !OBSERVED_DOMAIN.transomHeight.includes(config.transomHeight)) extrapolated.push(`hauteur d’imposte ${formatMm(config.transomHeight)} (dossier : ${list(OBSERVED_DOMAIN.transomHeight)})`);
   for (const [label, w] of [['gauche', config.leftSideWidth], ['droite', config.rightSideWidth]] as const) {
     if (w > 0 && !OBSERVED_DOMAIN.sideWidth[leaves].includes(w)) extrapolated.push(`partie latérale ${label} ${formatMm(w)} (dossier avec ${leaves} vantail${leaves === 2 ? 'x' : ''} : ${list(OBSERVED_DOMAIN.sideWidth[leaves])})`);
