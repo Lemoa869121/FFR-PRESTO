@@ -77,7 +77,7 @@ describe('computePreviewLayout', () => {
 
 describe('compositionLabel', () => {
   it('adds the leaf count only when the composition allows both', () => {
-    expect(compositionLabel({ composition: { type: 'porte_simple', leafCount: 1, elements: [] } })).toBe('Porte simple');
-    expect(compositionLabel({ composition: { type: 'porte_imposte', leafCount: 2, elements: [] } })).toBe('Porte avec imposte — 2 vantaux');
+    expect(compositionLabel({ composition: { type: 'porte_simple', leafCount: 1 } })).toBe('Porte simple');
+    expect(compositionLabel({ composition: { type: 'porte_imposte', leafCount: 2 } })).toBe('Porte avec imposte — 2 vantaux');
   });
 });
