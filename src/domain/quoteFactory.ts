@@ -9,7 +9,7 @@ export const STATUS_LABELS: Record<QuoteStatus, string> = {
   calcule: 'Calculé',
 };
 
-export function compositionLabel(quote: Pick<Quote, 'composition'>): string {
+export function compositionLabel(quote: { composition: Pick<Quote['composition'], 'type' | 'leafCount'> }): string {
   const def = getComposition(quote.composition.type);
   if (!def.hasDoor || def.leafCounts.length === 1) return def.label;
   return `${def.label} — ${quote.composition.leafCount === 1 ? '1 vantail' : '2 vantaux'}`;
