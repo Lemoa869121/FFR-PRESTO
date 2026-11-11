@@ -30,7 +30,7 @@ jobs:
       - name: Browser smoke test (vite preview + Chromium)
         timeout-minutes: 8
         run: |
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
           npm run smoke
       - name: Upload smoke-test screenshots
         if: always()
