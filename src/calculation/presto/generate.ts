@@ -1,4 +1,5 @@
 import type { GeneratedElement, GeneratedLine, PrestoBom, PrestoConfig } from './types';
+import { LEAF_GEOMETRY } from '../../data/sources/presto-manual/manual';
 
 /**
  * Generates the bill of materials of a Forster Presto composition by applying the
@@ -80,8 +81,11 @@ export function generatePrestoBom(config: PrestoConfig): PrestoBom {
   const Wd = W - L - R;
   const Hd = H - T;
   const double = config.leafCount === 2;
-  const leafWidth = double ? (Wd - 50) / 2 : Wd - 80; // P-VAN-01
-  const leafHeight = Hd - 50;
+  // P-VAN-01 (manual VP 3.5.32 / 3.5.33): 36 mm frame face + 4 mm rebate play at head and jambs,
+  // floor gap below the leaf. P-VAN-05: double-leaf width derived from the FFR Presto file.
+  const perSide = LEAF_GEOMETRY.frameOverlapMm + LEAF_GEOMETRY.rebatePlayMm;
+  const leafWidth = double ? (Wd - 50) / 2 : Wd - 2 * perSide;
+  const leafHeight = Hd - perSide - config.floorGap;
   if (Wd <= 0 || Hd <= 0 || leafWidth <= 140 || leafHeight <= 180) {
     throw new PrestoConfigError('Dimensions incompatibles avec les règles Presto (passage ou vantail trop petit).');
   }

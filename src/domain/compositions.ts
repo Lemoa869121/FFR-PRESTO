@@ -46,6 +46,7 @@ export function visibleDimensionFields(type: CompositionType, leafCount: LeafCou
   const fields: DimensionField[] = ['totalWidth', 'totalHeight'];
   if (def.hasDoor) fields.push('mainLeafWidth');
   if (def.hasDoor && leafCount === 2) fields.push('secondaryLeafWidth');
+  if (def.hasDoor) fields.push('floorGap');
   if (def.hasTransom) fields.push('transomHeight');
   if (def.hasLeftSide) fields.push('leftSideWidth');
   if (def.hasRightSide) fields.push('rightSideWidth');
@@ -58,6 +59,7 @@ export const DIMENSION_LABELS: Record<DimensionField, string> = {
   mainLeafWidth: 'Largeur du vantail principal',
   secondaryLeafWidth: 'Largeur du vantail secondaire',
   transomHeight: 'Hauteur de l’imposte',
+  floorGap: 'Jeu sous porte (sol fini)',
   leftSideWidth: 'Largeur de la partie latérale gauche',
   rightSideWidth: 'Largeur de la partie latérale droite',
 };

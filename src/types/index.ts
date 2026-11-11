@@ -45,6 +45,8 @@ export interface Dimensions {
   mainLeafWidth?: number;
   secondaryLeafWidth?: number;
   transomHeight?: number;
+  /** Gap between leaf and finished floor (doors only). */
+  floorGap?: number;
   leftSideWidth?: number;
   rightSideWidth?: number;
 }
@@ -146,6 +148,8 @@ export interface CuttingListItem {
   unit: 'piece' | 'metre';
   /** Cumulated length in metres. */
   totalLengthM?: number;
+  /** Profile weight for the line (kg/m of the presto manual × length × quantity). */
+  weightKg?: number;
   unitPrice: number | null;
   totalPrice: number | null;
   /** Human readable source ("Règle P-DOR-03, dérivée de 32 positions"). */
@@ -185,6 +189,8 @@ export interface CalculationResult {
   warnings: ValidationWarning[];
   /** Id of the reference position the configuration matches exactly, if any. */
   referencePositionId?: string;
+  /** Weight of profiles and glazing beads (manual kg/m), excluding gaskets, infill and hardware. */
+  profileWeightKg?: number;
   /** Main dimensions derived by the rules (mm). */
   geometry?: { doorFrameWidthMm: number; doorZoneHeightMm: number; leafWidthMm: number; leafHeightMm: number; leafCount: LeafCount };
 }
