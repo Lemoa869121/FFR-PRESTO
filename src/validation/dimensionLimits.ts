@@ -1,4 +1,4 @@
-import type { CompositionType, Dimensions, ValidationWarning } from '../types';
+import type { Dimensions, ValidationWarning } from '../types';
 import type { DimensionField } from '../domain/compositions';
 import { DIMENSION_LABELS } from '../domain/compositions';
 
@@ -23,7 +23,6 @@ export function checkDimensionLimits(
   dims: Dimensions,
   fields: DimensionField[],
   limits: readonly DimensionLimit[] = DIMENSION_LIMITS,
-  _composition?: CompositionType,
 ): ValidationWarning[] {
   const warnings: ValidationWarning[] = [];
   for (const limit of limits) {

@@ -5,7 +5,7 @@ import { parseHash, routeToHash } from '../app/router';
 import { checkDimensionLimits } from '../validation/dimensionLimits';
 
 // Intl uses narrow no-break spaces in fr-FR: normalise for readable assertions.
-const n = (s: string) => s.replace(/[  ]/g, ' ');
+const n = (s: string) => s.replace(/[\u00a0\u202f]/g, ' ');
 
 describe('French formatting', () => {
   it('uses the decimal comma and thousands separator', () => {

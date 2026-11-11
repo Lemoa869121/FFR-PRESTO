@@ -1,20 +1,6 @@
-import type { CuttingListItem, MaterialCategory } from '../types';
+import type { CuttingListItem } from '../types';
+import { CATEGORY_LABELS, CATEGORY_ORDER, EMPTY_CUTTING_LIST_MESSAGE } from '../domain/materialCategories';
 import { formatEuro, formatMetres, formatMm, formatQuantity } from '../utils/format';
-
-export const CATEGORY_LABELS: Record<MaterialCategory, string> = {
-  profiles: 'Profilés',
-  renforts: 'Renforts',
-  joints: 'Joints',
-  vitrage: 'Vitrage',
-  panneaux: 'Panneaux',
-  quincaillerie: 'Quincaillerie',
-  accessoires: 'Accessoires',
-  consommables: 'Consommables',
-};
-
-export const CATEGORY_ORDER: MaterialCategory[] = ['profiles', 'renforts', 'joints', 'vitrage', 'panneaux', 'quincaillerie', 'accessoires', 'consommables'];
-
-export const EMPTY_CUTTING_LIST_MESSAGE = 'La liste de débit sera calculée après intégration des règles métier Forster.';
 
 export function CuttingListTable({ items, caption = 'Liste de débit matière' }: { items: CuttingListItem[]; caption?: string }) {
   return (

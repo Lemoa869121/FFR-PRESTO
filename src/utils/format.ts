@@ -48,7 +48,7 @@ export function todayIso(now: Date = new Date()): string {
 
 /** Parses a French decimal string ("2 036,5") into a number; returns NaN when invalid. */
 export function parseFrenchNumber(input: string): number {
-  const cleaned = input.replace(/[\s  ]/g, '').replace(',', '.');
+  const cleaned = input.replace(/[\s\u00a0\u202f]/g, '').replace(',', '.');
   if (cleaned === '' || !/^-?\d+(\.\d+)?$/.test(cleaned)) return Number.NaN;
   return Number(cleaned);
 }
