@@ -32,12 +32,14 @@ Les longueurs suivent des écarts constants (ex. vantail = passage − 80) qui n
 | Hauteur de la zone porte Hd | 2 170 |
 | Hauteur d'imposte T | 330 |
 | Largeur de partie latérale | 963,5 (1 vantail), 482 (2 vantaux) |
+| Passage libre | 900 (1 vantail), 1 830 dont 900 pour le vantail principal (2 vantaux égaux) |
+| Vantaux d'une porte double | égaux (993 + 993) : des vantaux inégaux (ex. 2 UP = 900 + 500) sont calculés par extension |
 
 En dehors de ces valeurs, l'application calcule avec les mêmes règles mais affiche l'alerte **« Résultat extrapolé, à valider »**. Lorsque la configuration est identique à l'une des 32 positions, elle affiche la position de référence et sa page.
 
 ## Notation
 
-- W largeur totale, H hauteur totale ;
+- W largeur totale, H hauteur totale ; PL passage libre (vantaux ouverts à 90°), saisi pour les portes avec partie fixe et, au choix, pour les portes doubles ;
 - L, R largeur des parties latérales gauche et droite = longueur de la traverse du dormant au-dessus ou au-dessous de la partie fixe (dossier : 963,5 ou 482) ;
 - T hauteur d'imposte = longueur du montant de dormant en zone d'imposte (dossier : 330) ;
 - Wd = W − L − R (passage dormant) ; Hd = H − T (zone porte) ;
@@ -49,9 +51,13 @@ En dehors de ces valeurs, l'application calcule avec les mêmes règles mais aff
 
 | ID | Règle | Formule | Vérifiée sur | Sources | Statut |
 |---|---|---|---|---|---|
-| P-CFG-01 | Correspondance tirant ↔ DIN<br>*Libellés forsterpro « Sens d’ouverture DIN L / R » ; correspondance avec le vocabulaire « tirant » à confirmer.* | Tirant gauche = DIN L ; tirant droit = DIN R | DIN L et DIN R présents dans le dossier | Dossier FFR Presto (32 positions) | **à valider** |
+| P-CFG-01 | Sens d’ouverture DIN<br>*Vocabulaire Forster « Sens d’ouverture DIN L / R » ; saisie en DIN gauche / DIN droite (demande du 11/11/2026).* | Saisi directement : DIN gauche (DIN L) ou DIN droite (DIN R) | DIN L et DIN R présents dans le dossier | Dossier FFR Presto (32 positions)<br>Guide presto VP 3.6.10 (p. 276) | explicite |
 | P-CFG-03 | Jeu sous porte (sol fini)<br>*Cote « variable » sur les plans du système ; « Jeu de porte : 10 mm » dans le dossier.* | Paramètre saisi ; 10 mm par défaut | 10 mm dans le dossier | Guide presto VP 3.5.32 (p. 242)<br>Dossier FFR Presto (32 positions) | explicite |
 | P-CFG-02 | Ouverture intérieure / extérieure<br>*Confirmé par le demandeur le 11/11/2026.* | Ouverture intérieure = variante « Int » ; extérieure = variante « Ext » | 32 positions (Int / Ext 001 à 012) | Dossier FFR Presto (32 positions) | explicite |
+| P-PL-01 | Passage libre ↔ passage dormant<br>*Annotations « PL(90°) » des croquis du dossier ; face du dormant 70 mm.* | Passage libre (vantaux à 90°) = Wd − 2 × 70 − 33 × nombre de vantaux ; porte simple Wd = PL + 173, porte double Wd = PL + 206 | PL(90°) 900 pour Wd 1 073 ; 1 830 pour Wd 2 036 | Dossier FFR Presto (croquis, ex. p. 1 et 35)<br>Guide presto VP 3.5.33 (p. 243) | dérivée |
+| P-PL-02 | Passage libre du vantail principal | Vantail principal = passage libre du vantail + 93 | PL(90°) 900 pour un vantail de 993 (portes simples et doubles) | Dossier FFR Presto (croquis) | dérivée |
+| P-PL-03 | Passage libre en hauteur | PLD = Hd − 70 | PLD 2 100 pour Hd 2 170 | Dossier FFR Presto (croquis) | dérivée |
+| P-PL-04 | Unités de passage normalisées<br>*Valeurs données par le demandeur le 11/11/2026 ; proposées dans le formulaire.* | 1 UP = 900 mm ; 2 UP = 1 400 mm (900 + 500) ; 3 UP = 1 800 mm | — | Dossier FFR Presto (32 positions) | explicite |
 
 ### Dormant
 
@@ -81,7 +87,7 @@ En dehors de ces valeurs, l'application calcule avec les mêmes règles mais aff
 | ID | Règle | Formule | Vérifiée sur | Sources | Statut |
 |---|---|---|---|---|---|
 | P-VAN-01 | Dimensions du vantail<br>*Recouvrement du dormant 36 mm et jeu de feuillure 4 mm en tête et en montants (coupes B-B et C-C).* | Hauteur = Hd − (36 + 4) − jeu sous porte ; porte simple : largeur = Wd − 2 × (36 + 4) | Wd = 1 073, Hd = 2 170, jeu 10 (dossier) | Guide presto VP 3.5.32 (p. 242)<br>Guide presto VP 3.5.33 (p. 243)<br>Dossier FFR Presto (32 positions) | explicite |
-| P-VAN-05 | Largeur des vantaux d’une porte double<br>*Recouvrement au battement non coté lisiblement dans le guide (VP 3.5.36).* | (Wd − 50) / 2 par vantail | Wd = 2 036 | Dossier FFR Presto (32 positions) | dérivée |
+| P-VAN-05 | Largeur des vantaux d’une porte double<br>*Recouvrement au battement non coté lisiblement dans le guide (VP 3.5.36).* | Vantail principal + vantail semi-fixe = Wd − 50 ; vantaux égaux par défaut, sinon vantail principal selon P-PL-02 | Wd = 2 036, vantaux égaux | Dossier FFR Presto (32 positions) | dérivée |
 | P-VAN-02 | Montants et traverse haute du vantail<br>*Échange 32.803 ↔ 32.805 entre Int et Ext confirmé par le demandeur.* | Int : 32.805, 135° - 135° ; Ext : 32.803, 45° - 45° ; montants L = hauteur vantail, traverse haute L = largeur vantail | 32 positions (Int / Ext 001 à 012) | Dossier FFR Presto (32 positions) | dérivée |
 | P-VAN-03 | Traverse basse du vantail | 32.855, L = largeur vantail, 45° - 45° | 32 positions (Int / Ext 001 à 012) | Dossier FFR Presto (32 positions) | dérivée |
 | P-VAN-04 | Montant de battement (porte double)<br>*Cote de 34 mm au battement confirmée par le guide.* | Int : 32.803, 45° - 45° ; Ext : 32.805, 135° - 135° ; L = hauteur vantail ; après délardage = hauteur − 34 ; sur le montant D du 1er vantail si (Int et DIN L) ou (Ext et DIN R), sinon sur le montant G du 2e vantail | 16 portes doubles | Guide presto VP 3.6.10 (p. 276)<br>Dossier FFR Presto (32 positions) | dérivée |
