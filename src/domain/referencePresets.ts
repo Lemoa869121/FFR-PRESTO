@@ -1,6 +1,7 @@
 import type { CompositionType, Dimensions, Handing, LeafCount, OpeningSide } from '../types';
 import { REFERENCE_POSITIONS, type ReferencePosition } from '../calculation/presto/referencePositions';
 import { COMPOSITIONS } from './compositions';
+import { clearPassageFromFrame } from '../calculation/presto/clearPassage';
 
 export interface ReferencePreset {
   id: string;
@@ -39,12 +40,15 @@ export const REFERENCE_PRESETS: readonly ReferencePreset[] = REFERENCE_POSITIONS
     dimensions: {
       totalWidth: c.totalWidth,
       totalHeight: c.totalHeight,
+      floorGap: c.floorGap,
+      clearPassage: clearPassageFromFrame(c.totalWidth - c.leftSideWidth - c.rightSideWidth, c.leafCount),
+      ...(c.leafCount === 2 ? { activeClearPassage: 900, sizingMode: 'largeur_totale' as const } : {}),
       ...(c.transomHeight > 0 ? { transomHeight: c.transomHeight } : {}),
       ...(c.leftSideWidth > 0 ? { leftSideWidth: c.leftSideWidth } : {}),
       ...(c.rightSideWidth > 0 ? { rightSideWidth: c.rightSideWidth } : {}),
     },
     openingSide: c.openingSide,
-    handing: c.din === 'R' ? 'tirant_droit' : 'tirant_gauche',
+    handing: c.din === 'R' ? 'din_droite' : 'din_gauche',
   };
 });
 

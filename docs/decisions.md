@@ -63,3 +63,14 @@ Remplace la consigne initiale « identité visuelle neutre, sans logo Forster ta
 ## D-016 — Guide de mise en œuvre presto comme deuxième source
 
 Le guide Forster presto 918301 (01/2021) ne contient pas de formules de débit mais des cotes de construction, des tables et des règles de pose. Il sert à **confirmer** des règles dérivées, qui deviennent « explicites » avec la page VP citée (P-VAN-01, P-ACC-04), à **ajouter** des contrôles explicites (P-CTL-01 à 04, P-CFG-03) et à **encadrer** les règles ambiguës (P-ACC-01). Une règle explicite du guide qui contredirait le dossier FFR Presto ne serait pas appliquée silencieusement : l'écart serait signalé. Aucun cas de ce type n'a été trouvé. Le PDF (141 Mo) n'est pas versionné ; il est identifié par son SHA-256.
+
+## D-017 — Saisie par passage libre et sens DIN (11/11/2026)
+
+À la demande du 11/11/2026 :
+- le sens d'ouverture se saisit en **DIN gauche / DIN droite** ; le terme « tirant » n'est plus employé (les chiffrages enregistrés sont convertis automatiquement) ;
+- une porte avec partie fixe se dimensionne par sa **largeur totale et son passage libre** ; les parties fixes prennent le reste, réparti également s'il y en a deux ;
+- une porte double seule se dimensionne au choix par sa largeur totale ou son passage libre, avec le passage du vantail principal (900 mm par défaut) ; les vantaux peuvent être inégaux ;
+- les unités de passage normalisées sont proposées : 1 UP 900, 2 UP 1 400 (900 + 500), 3 UP 1 800 mm ;
+- sur le schéma, la base des triangles d'ouverture est du côté des paumelles. Le schéma est une vue extérieure, comme les croquis forsterpro : une porte DIN gauche ouvrant vers l'intérieur a donc ses paumelles à droite.
+
+Les relations passage libre ↔ dimensions (P-PL-01 à 03) sont dérivées des annotations « PL(90°) » et « PLD » des croquis du dossier, soit une seule largeur de porte par type : elles restent signalées comme extrapolées hors de ces valeurs.

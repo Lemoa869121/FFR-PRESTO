@@ -1,5 +1,6 @@
 import type { ValidationWarning } from '../../types';
 import { getComposition } from '../../domain/compositions';
+import { resolveDoorSizing } from '../../domain/doorSizing';
 import type { CalculationInput } from '../types';
 import type { PrestoConfig } from './types';
 import { OBSERVED_DOMAIN, REFERENCE_FLOOR_GAP } from './referencePositions';
@@ -31,25 +32,27 @@ export function prestoConfigFromInput(input: CalculationInput): ConfigResult {
     if (cond) warnings.push({ code: 'DIMENSION_MISSING', level: 'bloquant', message: `${label} manquante.` });
     return cond;
   };
-  if (
-    missing(def.hasLeftSide && !(d.leftSideWidth && d.leftSideWidth > 0), 'Largeur de la partie latérale gauche') ||
-    missing(def.hasRightSide && !(d.rightSideWidth && d.rightSideWidth > 0), 'Largeur de la partie latérale droite') ||
-    missing(def.hasTransom && !(d.transomHeight && d.transomHeight > 0), 'Hauteur de l’imposte')
-  ) {
+  if (missing(def.hasTransom && !(d.transomHeight && d.transomHeight > 0), 'Hauteur de l’imposte')) {
+    return { config: null, warnings };
+  }
+  // P-PL-01 / P-PL-02: door sized by total width or by clear passage.
+  const sizing = resolveDoorSizing(input.composition.type, input.composition.leafCount, d);
+  if (sizing.errors.length > 0) {
+    for (const message of sizing.errors) warnings.push({ code: 'DIMENSION_MISSING', level: 'bloquant', message });
     return { config: null, warnings };
   }
   const config: PrestoConfig = {
     openingSide: input.options.openingSide,
     leafCount: input.composition.leafCount,
-    din: input.options.handing === 'tirant_droit' ? 'R' : 'L',
-    totalWidth: d.totalWidth,
+    din: input.options.handing === 'din_droite' ? 'R' : 'L',
+    totalWidth: sizing.totalWidth,
     totalHeight: d.totalHeight,
-    leftSideWidth: def.hasLeftSide ? d.leftSideWidth ?? 0 : 0,
-    rightSideWidth: def.hasRightSide ? d.rightSideWidth ?? 0 : 0,
+    leftSideWidth: sizing.leftSideWidth,
+    rightSideWidth: sizing.rightSideWidth,
     transomHeight: def.hasTransom ? d.transomHeight ?? 0 : 0,
     floorGap: d.floorGap ?? REFERENCE_FLOOR_GAP,
+    ...(sizing.activeLeafWidth !== undefined ? { activeLeafWidth: sizing.activeLeafWidth } : {}),
   };
-  warnings.push({ code: 'DIN_MAPPING', level: 'info', message: `Tirant ${config.din === 'L' ? 'gauche' : 'droit'} interprété comme DIN ${config.din} (règle P-CFG-01, à valider).` });
 
   // Flag every parameter outside the values present in the source file.
   const extrapolated: string[] = [];
@@ -60,6 +63,10 @@ export function prestoConfigFromInput(input: CalculationInput): ConfigResult {
   if (!OBSERVED_DOMAIN.doorZoneHeight.includes(Hd)) extrapolated.push(`hauteur de la zone porte ${formatMm(Hd)} (dossier : ${list(OBSERVED_DOMAIN.doorZoneHeight)})`);
   if (!OBSERVED_DOMAIN.floorGap.includes(config.floorGap)) extrapolated.push(`jeu sous porte ${formatMm(config.floorGap)} (dossier : ${list(OBSERVED_DOMAIN.floorGap)})`);
   if (config.transomHeight > 0 && !OBSERVED_DOMAIN.transomHeight.includes(config.transomHeight)) extrapolated.push(`hauteur d’imposte ${formatMm(config.transomHeight)} (dossier : ${list(OBSERVED_DOMAIN.transomHeight)})`);
+  if (leaves === 2) {
+    const active = config.activeLeafWidth ?? (Wd - 50) / 2;
+    if (Math.abs(active - (Wd - 50) / 2) > 1e-6) extrapolated.push(`vantaux inégaux (vantail principal ${formatMm(active)}, vantail semi-fixe ${formatMm(Wd - 50 - active)} ; dossier : vantaux égaux)`);
+  }
   for (const [label, w] of [['gauche', config.leftSideWidth], ['droite', config.rightSideWidth]] as const) {
     if (w > 0 && !OBSERVED_DOMAIN.sideWidth[leaves].includes(w)) extrapolated.push(`partie latérale ${label} ${formatMm(w)} (dossier avec ${leaves} vantail${leaves === 2 ? 'x' : ''} : ${list(OBSERVED_DOMAIN.sideWidth[leaves])})`);
   }

@@ -37,7 +37,7 @@ describe('visibleDimensionFields', () => {
   });
   it('shows transom and both side widths for the full composition', () => {
     expect(visibleDimensionFields('porte_imposte_laterales', 1)).toEqual(
-      ['totalWidth', 'totalHeight', 'mainLeafWidth', 'floorGap', 'transomHeight', 'leftSideWidth', 'rightSideWidth'],
+      ['totalWidth', 'totalHeight', 'clearPassage', 'mainLeafWidth', 'floorGap', 'transomHeight', 'leftSideWidth', 'rightSideWidth'],
     );
   });
   it('shows only the right side for "imposte + partie latérale droite"', () => {
@@ -58,20 +58,21 @@ describe('buildElements', () => {
 
 describe('computePreviewLayout', () => {
   it('returns null for incoherent dimensions', () => {
-    expect(computePreviewLayout('porte_simple', 1, { totalWidth: 0, totalHeight: 2000 }, 'tirant_gauche')).toBeNull();
-    expect(computePreviewLayout('porte_lateral_droite', 1, { totalWidth: 900, totalHeight: 2000, rightSideWidth: 1000 }, 'tirant_gauche')).toBeNull();
+    expect(computePreviewLayout('porte_simple', 1, { totalWidth: 0, totalHeight: 2000 }, 'din_gauche')).toBeNull();
+    expect(computePreviewLayout('porte_lateral_droite', 1, { totalWidth: 900, totalHeight: 2000, rightSideWidth: 1000 }, 'din_gauche')).toBeNull();
   });
   it('draws two leaves for a double door, respecting the total width', () => {
-    const layout = computePreviewLayout('porte_double', 2, { totalWidth: 2036, totalHeight: 2170 }, 'tirant_gauche');
+    const layout = computePreviewLayout('porte_double', 2, { totalWidth: 2036, totalHeight: 2170 }, 'din_gauche');
     const leaves = layout?.panels.filter((p) => p.kind === 'vantail') ?? [];
     expect(leaves).toHaveLength(2);
     expect(leaves.reduce((s, l) => s + l.w, 0)).toBe(2036);
   });
   it('places the transom on top and adds height dimensions', () => {
-    const layout = computePreviewLayout('porte_imposte', 1, { totalWidth: 1073, totalHeight: 2500, transomHeight: 330 }, 'tirant_droit');
+    const layout = computePreviewLayout('porte_imposte', 1, { totalWidth: 1073, totalHeight: 2500, transomHeight: 330 }, 'din_droite');
     expect(layout?.panels.find((p) => p.label === 'Imposte')).toMatchObject({ y: 0, h: 330 });
     expect(layout?.dimensions.filter((d) => d.orientation === 'vertical').map((d) => d.value)).toEqual([2500, 330, 2170]);
-    expect(layout?.panels.find((p) => p.kind === 'vantail')?.hinge).toBe('droite');
+    // DIN droite opening inwards: hinges on the left in the exterior view.
+    expect(layout?.panels.find((p) => p.kind === 'vantail')?.hinge).toBe('gauche');
   });
 });
 

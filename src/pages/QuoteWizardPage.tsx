@@ -1,9 +1,11 @@
-import { useMemo, useState, type InputHTMLAttributes, type Ref } from 'react';
+import { useEffect, useMemo, useState, type InputHTMLAttributes, type Ref } from 'react';
 import { Controller, useForm, useWatch, type FieldPath } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { CompositionType, LeafCount, Quote } from '../types';
 import { quoteFormSchema, type QuoteFormValues } from '../validation/quoteSchema';
-import { COMPOSITIONS, DERIVED_DIMENSION_FIELDS, DIMENSION_LABELS, getComposition, visibleDimensionFields, type DimensionField } from '../domain/compositions';
+import { COMPOSITIONS, DIMENSION_LABELS, dimensionFieldSpecs, getComposition, type DimensionField } from '../domain/compositions';
+import { offersSizingChoice, usesClearPassage } from '../domain/doorSizing';
+import { PASSAGE_UNITS } from '../calculation/presto/clearPassage';
 import { REFERENCE_PRESETS, referenceDefault } from '../domain/referencePresets';
 import { formFromQuote, quoteFromForm } from '../domain/quoteFactory';
 import { QuoteRepository, StorageError } from '../storage/quoteStorage';
@@ -54,7 +56,8 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
   const { register, control, handleSubmit, trigger, setValue, formState: { errors } } = form;
   const values = useWatch({ control }) as QuoteFormValues;
   const compositionDef = getComposition(values.composition.type);
-  const dimensionFields = visibleDimensionFields(values.composition.type, values.composition.leafCount);
+  const dimensionSpecs = dimensionFieldSpecs(values.composition.type, values.composition.leafCount, values.dimensions);
+  const sizingChoice = offersSizingChoice(values.composition.type, values.composition.leafCount);
   const geometry = useMemo(() => {
     try {
       return calculateQuote(values).geometry;
@@ -62,6 +65,22 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
       return undefined;
     }
   }, [values]);
+
+  // Write the values computed from the clear passage back into the form (preview, summary, dashboard).
+  useEffect(() => {
+    if (!geometry) return;
+    const derived: Partial<Record<'totalWidth' | 'leftSideWidth' | 'rightSideWidth' | 'clearPassage', number>> = {};
+    for (const spec of dimensionSpecs) {
+      if (spec.editable) continue;
+      if (spec.field === 'totalWidth') derived.totalWidth = geometry.totalWidthMm;
+      if (spec.field === 'leftSideWidth') derived.leftSideWidth = geometry.leftSideWidthMm;
+      if (spec.field === 'rightSideWidth') derived.rightSideWidth = geometry.rightSideWidthMm;
+      if (spec.field === 'clearPassage') derived.clearPassage = geometry.clearPassageMm;
+    }
+    for (const [field, value] of Object.entries(derived) as [keyof typeof derived, number][]) {
+      if (form.getValues(`dimensions.${field}`) !== value) setValue(`dimensions.${field}`, value);
+    }
+  }, [geometry, dimensionSpecs, form, setValue]);
 
   if (quoteId && !existing) {
     return <Notice tone="bloquant" title="Chiffrage introuvable">Ce chiffrage n’existe pas ou a été supprimé.</Notice>;
@@ -93,6 +112,22 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
     fill('leftSideWidth', def.hasLeftSide);
     fill('rightSideWidth', def.hasRightSide);
     if (def.hasDoor && dims.floorGap === undefined) setValue('dimensions.floorGap', 10);
+    if (def.hasDoor && leafCount === 2 && dims.activeClearPassage === undefined) setValue('dimensions.activeClearPassage', 900);
+    if (def.hasDoor && leafCount === 2 && dims.sizingMode === undefined) setValue('dimensions.sizingMode', 'largeur_totale');
+    // Clear passage proposed by default: 1 UP (900) for one leaf, 3 UP (1 800) for two leaves.
+    const byPassage = usesClearPassage(type, leafCount, form.getValues('dimensions'));
+    const current = form.getValues('dimensions.clearPassage');
+    if (byPassage && (current === undefined || (leafCount === 2 && current < 1300) || (leafCount === 1 && current > 1300))) {
+      setValue('dimensions.clearPassage', leafCount === 2 ? 1800 : 900);
+    }
+  };
+
+  const applyPassageUnit = (id: string) => {
+    const unit = PASSAGE_UNITS.find((u) => u.id === id);
+    if (!unit) return;
+    if (sizingChoice) setValue('dimensions.sizingMode', 'passage_libre');
+    setValue('dimensions.clearPassage', unit.clearPassage, { shouldValidate: true });
+    if (values.composition.leafCount === 2) setValue('dimensions.activeClearPassage', unit.activeClearPassage, { shouldValidate: true });
   };
 
   const applyPreset = (id: string) => {
@@ -107,8 +142,29 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
 
   const derivedValue = (field: DimensionField): number | undefined => {
     if (!geometry) return undefined;
-    if (field === 'mainLeafWidth') return geometry.leafWidthMm;
-    if (field === 'secondaryLeafWidth') return geometry.leafCount === 2 ? geometry.leafWidthMm : undefined;
+    switch (field) {
+      case 'mainLeafWidth': return geometry.leafWidthMm;
+      case 'secondaryLeafWidth': return geometry.secondaryLeafWidthMm;
+      case 'totalWidth': return geometry.totalWidthMm;
+      case 'clearPassage': return geometry.clearPassageMm;
+      case 'leftSideWidth': return geometry.leftSideWidthMm;
+      case 'rightSideWidth': return geometry.rightSideWidthMm;
+      default: return values.dimensions[field];
+    }
+  };
+
+  const derivedHint = (field: DimensionField): string => {
+    if (field === 'mainLeafWidth') return values.composition.leafCount === 1 ? 'Calculée : règle P-VAN-01 (guide presto VP 3.5.33)' : 'Calculée depuis le passage libre du vantail principal (P-PL-02)';
+    if (field === 'secondaryLeafWidth') return 'Calculée : passage dormant − 50 − vantail principal (P-VAN-05)';
+    if (field === 'clearPassage') return 'Calculé depuis la largeur (règle P-PL-01)';
+    return 'Calculée depuis la largeur totale et le passage libre (P-PL-01)';
+  };
+
+  const inputHint = (field: DimensionField): string | undefined => {
+    if (field === 'transomHeight') return 'Valeur du dossier FFR Presto : 330 mm';
+    if (field === 'floorGap') return 'Variable selon le guide presto (VP 3.5.32) ; dossier FFR Presto : 10 mm';
+    if (field === 'clearPassage') return 'UP normalisés : 1 UP 900, 2 UP 1 400 (900 + 500), 3 UP 1 800 mm';
+    if (field === 'activeClearPassage') return 'Vantail ouvert à 90° ; 900 mm = 1 UP';
     return undefined;
   };
 
@@ -179,7 +235,7 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
                 <option value="">— Choisir une position de référence —</option>
                 {REFERENCE_PRESETS.map((p) => <option key={p.id} value={p.id}>{p.label} (p. {p.pdfPage})</option>)}
               </select>
-              <p className="field__hint">Renseigne la composition, les dimensions, l’ouverture et le tirant de la position choisie.</p>
+              <p className="field__hint">Renseigne la composition, les dimensions, l’ouverture et le sens DIN de la position choisie.</p>
             </div>
             <div className="choice-grid" role="radiogroup" aria-label="Type de composition">
               {COMPOSITIONS.map((c) => (
@@ -215,14 +271,41 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
             <legend>Étape 3 — Dimensions (mm)</legend>
             <div className="split">
               <div className="grid-2">
-                {dimensionFields.map((field) => DERIVED_DIMENSION_FIELDS.includes(field) ? (
+                {sizingChoice && (
+                  <div className="field" role="radiogroup" aria-label="Dimensionnement de la porte double">
+                    <span className="field__label">Dimensionner la porte par</span>
+                    <label className="radio">
+                      <input type="radio" checked={values.dimensions.sizingMode !== 'passage_libre'} onChange={() => setValue('dimensions.sizingMode', 'largeur_totale', { shouldValidate: true })} /> Largeur totale
+                    </label>
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        checked={values.dimensions.sizingMode === 'passage_libre'}
+                        onChange={() => {
+                          setValue('dimensions.sizingMode', 'passage_libre', { shouldValidate: true });
+                          if (values.dimensions.clearPassage === undefined && geometry) setValue('dimensions.clearPassage', geometry.clearPassageMm);
+                        }}
+                      /> Passage libre
+                    </label>
+                  </div>
+                )}
+                {getComposition(values.composition.type).hasDoor && (
+                  <div className="field">
+                    <label htmlFor="passage-unit">Passage libre normalisé (UP)</label>
+                    <select id="passage-unit" value="" onChange={(e) => applyPassageUnit(e.target.value)}>
+                      <option value="">— Choisir une unité de passage —</option>
+                      {PASSAGE_UNITS.filter((u) => u.leafCounts.includes(values.composition.leafCount)).map((u) => <option key={u.id} value={u.id}>{u.label}</option>)}
+                    </select>
+                  </div>
+                )}
+                {dimensionSpecs.map(({ field, editable }) => !editable ? (
                   <MmInput
                     key={field}
                     label={DIMENSION_LABELS[field]}
                     value={derivedValue(field)}
                     onChange={() => undefined}
                     readOnly
-                    hint={field === 'mainLeafWidth' && values.composition.leafCount === 1 ? 'Calculée : règle P-VAN-01 (guide presto VP 3.5.33)' : 'Calculée : règle P-VAN-05 (dérivée du dossier FFR Presto)'}
+                    hint={derivedHint(field)}
                   />
                 ) : (
                   <Controller
@@ -236,11 +319,7 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
                         onChange={f.onChange}
                         onBlur={f.onBlur}
                         error={fieldState.error?.message}
-                        hint={field === 'transomHeight' || field === 'leftSideWidth' || field === 'rightSideWidth'
-                          ? `Valeur du dossier FFR Presto : ${String(referenceDefault(field, values.composition.leafCount)).replace('.', ',')} mm`
-                          : field === 'floorGap'
-                            ? 'Variable selon le guide presto (VP 3.5.32) ; dossier FFR Presto : 10 mm'
-                            : undefined}
+                        hint={inputHint(field)}
                       />
                     )}
                   />
@@ -253,11 +332,18 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
                   )}
                 />
               </div>
-              <CompositionPreview type={values.composition.type} leafCount={values.composition.leafCount} dimensions={values.dimensions} handing={values.options.handing} />
+              <CompositionPreview
+                type={values.composition.type}
+                leafCount={values.composition.leafCount}
+                dimensions={values.dimensions}
+                handing={values.options.handing}
+                openingSide={values.options.openingSide}
+                leafWidths={geometry?.secondaryLeafWidthMm !== undefined ? { active: geometry.leafWidthMm, passive: geometry.secondaryLeafWidthMm } : undefined}
+              />
             </div>
             <Notice tone="info">
-              Largeur de partie latérale = longueur de la traverse du dormant au-dessus de la partie fixe ; hauteur d’imposte = hauteur totale − hauteur
-              de la zone porte (dossier : 2 170 mm). Limites dimensionnelles Forster non fournies : validation min / max désactivée (règle métier à fournir).
+              Passage libre = largeur de passage, vantaux ouverts à 90°. Avec une partie fixe, la largeur totale et le passage libre suffisent : les parties
+              fixes prennent le reste (réparti également s’il y en a deux). Hauteur d’imposte = hauteur totale − hauteur de la zone porte (dossier : 2 170 mm).
             </Notice>
           </fieldset>
         )}
@@ -273,9 +359,9 @@ export function QuoteWizardPage({ repository, quoteId }: { repository: QuoteRepo
                 <label className="radio"><input type="radio" value="exterieur" {...register('options.openingSide')} /> Extérieure</label>
               </div>
               <div className="field">
-                <span className="field__label">Tirant</span>
-                <label className="radio"><input type="radio" value="tirant_gauche" {...register('options.handing')} /> Tirant gauche</label>
-                <label className="radio"><input type="radio" value="tirant_droit" {...register('options.handing')} /> Tirant droit</label>
+                <span className="field__label">Sens d’ouverture DIN</span>
+                <label className="radio"><input type="radio" value="din_gauche" {...register('options.handing')} /> DIN gauche</label>
+                <label className="radio"><input type="radio" value="din_droite" {...register('options.handing')} /> DIN droite</label>
               </div>
               {OPTION_LISTS.map((list) => (
                 <div key={list.field} className="field">

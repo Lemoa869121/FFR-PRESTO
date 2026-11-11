@@ -60,11 +60,15 @@ export const REFERENCE_POSITIONS: readonly ReferencePosition[] = (['interieur', 
   })),
 );
 
+const activeOf = (c: PrestoConfig) =>
+  c.leafCount === 2 ? c.activeLeafWidth ?? (c.totalWidth - c.leftSideWidth - c.rightSideWidth - 50) / 2 : 0;
+
 const same = (a: PrestoConfig, b: PrestoConfig) =>
   a.openingSide === b.openingSide && a.leafCount === b.leafCount && a.din === b.din &&
   Math.abs(a.totalWidth - b.totalWidth) < 1e-6 && Math.abs(a.totalHeight - b.totalHeight) < 1e-6 &&
   Math.abs(a.leftSideWidth - b.leftSideWidth) < 1e-6 && Math.abs(a.rightSideWidth - b.rightSideWidth) < 1e-6 &&
-  Math.abs(a.transomHeight - b.transomHeight) < 1e-6 && Math.abs(a.floorGap - b.floorGap) < 1e-6;
+  Math.abs(a.transomHeight - b.transomHeight) < 1e-6 && Math.abs(a.floorGap - b.floorGap) < 1e-6 &&
+  Math.abs(activeOf(a) - activeOf(b)) < 1e-6;
 
 export function findReferencePosition(config: PrestoConfig): ReferencePosition | undefined {
   return REFERENCE_POSITIONS.find((p) => same(p.config, config));

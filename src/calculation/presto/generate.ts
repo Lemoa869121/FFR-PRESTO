@@ -1,5 +1,6 @@
 import type { GeneratedElement, GeneratedLine, PrestoBom, PrestoConfig } from './types';
 import { LEAF_GEOMETRY } from '../../data/sources/presto-manual/manual';
+import { DOUBLE_MEETING_MM, clearHeightFromDoorZone, clearPassageFromFrame, clearPassageOfLeaf } from './clearPassage';
 
 /**
  * Generates the bill of materials of a Forster Presto composition by applying the
@@ -84,9 +85,10 @@ export function generatePrestoBom(config: PrestoConfig): PrestoBom {
   // P-VAN-01 (manual VP 3.5.32 / 3.5.33): 36 mm frame face + 4 mm rebate play at head and jambs,
   // floor gap below the leaf. P-VAN-05: double-leaf width derived from the FFR Presto file.
   const perSide = LEAF_GEOMETRY.frameOverlapMm + LEAF_GEOMETRY.rebatePlayMm;
-  const leafWidth = double ? (Wd - 50) / 2 : Wd - 2 * perSide;
+  const leafWidth = double ? config.activeLeafWidth ?? (Wd - DOUBLE_MEETING_MM) / 2 : Wd - 2 * perSide;
+  const secondaryLeafWidth = double ? Wd - DOUBLE_MEETING_MM - leafWidth : undefined;
   const leafHeight = Hd - perSide - config.floorGap;
-  if (Wd <= 0 || Hd <= 0 || leafWidth <= 140 || leafHeight <= 180) {
+  if (Wd <= 0 || Hd <= 0 || leafWidth <= 140 || leafHeight <= 180 || (secondaryLeafWidth !== undefined && secondaryLeafWidth <= 140)) {
     throw new PrestoConfigError('Dimensions incompatibles avec les règles Presto (passage ou vantail trop petit).');
   }
   if ((L > 0 && L <= 50) || (R > 0 && R <= 50) || (T > 0 && T <= 90)) {
@@ -151,24 +153,28 @@ export function generatePrestoBom(config: PrestoConfig): PrestoBom {
   const stileCut = ext ? '45° - 45°' : '135° - 135°';
   const meetingOnFirst = (config.din === 'L') !== ext;
   const door: GeneratedLine[] = [];
+  const widths = double ? [leafWidth, secondaryLeafWidth ?? leafWidth] : [leafWidth];
   for (let i = 0; i < leaves; i += 1) {
+    const width = widths[i] ?? leafWidth;
     for (const side of ['D', 'G'] as const) {
       const meeting = double && ((meetingOnFirst && i === 0 && side === 'D') || (!meetingOnFirst && i === 1 && side === 'G'));
       door.push(meeting
         ? profile(ext ? '32.805' : '32.803', leafHeight, ext ? '135° - 135°' : '45° - 45°', side, 'P-VAN-04', { lengthAfterTrimMm: leafHeight - 34 })
         : profile(stile, leafHeight, stileCut, side, 'P-VAN-02'));
     }
-    door.push(profile('32.855', leafWidth, '45° - 45°', 'B', 'P-VAN-03'));
-    door.push(profile(stile, leafWidth, stileCut, 'H', 'P-VAN-02'));
+    door.push(profile('32.855', width, '45° - 45°', 'B', 'P-VAN-03'));
+    door.push(profile(stile, width, stileCut, 'H', 'P-VAN-02'));
   }
-  const leafClearW = leafWidth - 140; // P-VIT-01
+  const leafClearW = leafWidth - 140; // P-VIT-01 (active leaf)
   const leafClearH = leafHeight - 180;
-  door.push(...glazedField(leafClearW, leafClearH, leaves));
+  // Identical leaves are grouped (count 2), as in the forsterpro file.
+  const distinct = [...new Set(widths)];
+  for (const w of distinct) door.push(...glazedField(w - 140, leafClearH, widths.filter((x) => x === w).length));
   door.push(pieces('hardware', '907662', 3 * leaves, 'P-QUI-01'));
   for (const ref of ['FFR019FND', 'FFR042FND', 'FFR046FND']) door.push(pieces('hardware', ref, 1, 'P-QUI-02'));
   if (double) for (const ref of ['FFR045FND', 'FFR049FND', 'FFR050FND']) door.push(pieces('hardware', ref, 1, 'P-QUI-03'));
-  door.push(gasket('905306', metres(leaves * (2 * leafHeight + leafWidth)), 'P-JNT-02'));
-  door.push(pieces('accessories', '900100', drainsForField(leafClearW) * leaves, 'P-ACC-02'));
+  door.push(gasket('905306', metres(widths.reduce((s, w) => s + 2 * leafHeight + w, 0)), 'P-JNT-02'));
+  door.push(pieces('accessories', '900100', widths.reduce((s, w) => s + drainsForField(w - 140), 0), 'P-ACC-02'));
   if (double) {
     door.push(pieces('accessories', '916320', config.din === 'L' ? 3 : 2, 'P-ACC-03'));
     door.push(pieces('accessories', '916322', config.din === 'L' ? 2 : 3, 'P-ACC-03'));
@@ -188,5 +194,18 @@ export function generatePrestoBom(config: PrestoConfig): PrestoBom {
     },
     ...fields.map((f): GeneratedElement => ({ kind: 'fixe', label: f.label, clear: { widthMm: f.w, heightMm: f.h }, lines: glazedField(f.w, f.h, 1) })),
   ];
-  return { config, geometry: { doorFrameWidth: Wd, doorZoneHeight: Hd, leafWidth, leafHeight }, elements };
+  return {
+    config,
+    geometry: {
+      doorFrameWidth: Wd,
+      doorZoneHeight: Hd,
+      leafWidth,
+      secondaryLeafWidth,
+      leafHeight,
+      clearPassage: clearPassageFromFrame(Wd, config.leafCount),
+      activeClearPassage: clearPassageOfLeaf(leafWidth),
+      clearHeight: clearHeightFromDoorZone(Hd),
+    },
+    elements,
+  };
 }

@@ -8,7 +8,7 @@ function input(partial: Partial<CalculationInput> = {}): CalculationInput {
   return {
     project: { name: 'Test', quoteReference: 'T-1', createdOn: '2026-11-11', quantity: 2 },
     composition: { type: 'porte_lateral_droite', leafCount: 1 },
-    dimensions: { totalWidth: 2036.5, totalHeight: 2170, rightSideWidth: 963.5 },
+    dimensions: { totalWidth: 2036.5, totalHeight: 2170, clearPassage: 900 },
     options: { ...DEFAULT_OPTIONS },
     ...partial,
   };
@@ -74,8 +74,8 @@ describe('calculation engine', () => {
   it('maps exterior opening and right handing to the matching position', () => {
     const r = calculateQuote(input({
       composition: { type: 'porte_imposte_lateral_gauche', leafCount: 2 },
-      dimensions: { totalWidth: 2518, totalHeight: 2500, leftSideWidth: 482, transomHeight: 330 },
-      options: { ...DEFAULT_OPTIONS, openingSide: 'exterieur', handing: 'tirant_droit' },
+      dimensions: { totalWidth: 2518, totalHeight: 2500, clearPassage: 1830, activeClearPassage: 900, transomHeight: 330 },
+      options: { ...DEFAULT_OPTIONS, openingSide: 'exterieur', handing: 'din_droite' },
     }));
     expect(r.referencePositionId).toBe('Ext 010b');
   });

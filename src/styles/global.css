@@ -267,3 +267,4 @@ details summary { cursor: pointer; color: var(--fo-blue2); font-weight: 500; }
 /* Tableau déjà sous un bandeau de carte : légende en gris pour éviter deux bandeaux bleus. */
 .card .data-table caption { background: var(--fo-grey-50); color: var(--fo-ink); }
 .kv .tag { white-space: normal; margin-left: 0; }
+.preview-hinges rect { fill: var(--fo-blue); }
