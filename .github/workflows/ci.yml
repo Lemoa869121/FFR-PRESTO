@@ -27,6 +27,17 @@ jobs:
         run: npm test
       - name: Production build (type-check + Vite)
         run: npm run build
+      - name: Browser smoke test (vite preview + Chromium)
+        run: |
+          npx playwright install --with-deps chromium
+          npm run smoke
+      - name: Upload smoke-test screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-screenshots
+          path: smoke-screenshots
+          if-no-files-found: ignore
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
