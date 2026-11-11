@@ -1,0 +1,64 @@
+  Débit optimisé                                                   Date:
+                                                                   Affaire:
+                                                                                              11/11/2026 / 14:25
+                                                                                              FFR Presto
+
+                       forster 32.855                         Forster PRESTO, Acier brut
+                                                              Trait. surface:
+                       10 Pce á 6.000 mm                      Largeur: 50,0 mm / Hauteur: 90,0
+                                                              Chutes: 12.336 mm = 20,6 % (y compris les chutes
+                                                              restantes)
+       Chutes utilisables: 600 mm             Epaisseur lame de scie: 4 mm                              Chutes d'extr.: 60 mm
+Quantité Orientation                Débit          Longueur               Coupe              Position / Lot
+
+ 1x
+
+   1        B / 13                  993,0                993,0           45° / 45°           Int 004
+   1        B / 10                  993,0                993,0           45° / 45°           Int 003b
+   1        B / 10                  993,0                993,0           45° / 45°           Int 003
+   1        B / 10                  993,0                993,0           45° / 45°           Int 002
+   1        B/7                     993,0                993,0           45° / 45°           Int 001
+
+ 1x
+
+   1        B / 11                  993,0                993,0           45° / 45°           Int 007
+   1        B/7                     993,0                993,0           45° / 45°           Int 007
+   1        B / 16                  993,0                993,0           45° / 45°           Int 006
+   1        B / 13                  993,0                993,0           45° / 45°           Int 005
+   1        B / 13                  993,0                993,0           45° / 45°           Int 004b
+
+ 1x
+
+   1        B / 14                  993,0                993,0           45° / 45°           Int 009b
+   1        B / 10                  993,0                993,0           45° / 45°           Int 009
+   1        B / 14                  993,0                993,0           45° / 45°           Int 009
+   1        B / 10                  993,0                993,0           45° / 45°           Int 008
+   1        B / 14                  993,0                993,0           45° / 45°           Int 008
+
+ 1x
+
+   1        B / 17                  993,0                993,0           45° / 45°           Int 010b
+   1        B / 13                  993,0                993,0           45° / 45°           Int 010b
+   1        B / 13                  993,0                993,0           45° / 45°           Int 010
+   1        B / 17                  993,0                993,0           45° / 45°           Int 010
+   1        B / 10                  993,0                993,0           45° / 45°           Int 009b
+
+ 1x
+
+   1        B/7                     993,0                993,0           45° / 45°           Ext 001
+   1        B / 20                  993,0                993,0           45° / 45°           Int 012
+   1        B / 16                  993,0                993,0           45° / 45°           Int 012
+   1        B / 17                  993,0                993,0           45° / 45°           Int 011
+   1        B / 13                  993,0                993,0           45° / 45°           Int 011
+
+ 1x
+
+   1        B / 13                  993,0                993,0           45° / 45°           Ext 004b
+   1        B / 13                  993,0                993,0           45° / 45°           Ext 004
+   1        B / 10                  993,0                993,0           45° / 45°           Ext 003b
+   1        B / 10                  993,0                993,0           45° / 45°           Ext 003
+   1        B / 10                  993,0                993,0           45° / 45°           Ext 002
+
+                     forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                           Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto           Page: 19
+

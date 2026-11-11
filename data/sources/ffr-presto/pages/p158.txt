@@ -1,0 +1,59 @@
+  Débit optimisé                                                Date:
+                                                                Affaire:
+                                                                                           11/11/2026 / 14:25
+                                                                                           FFR Presto
+
+Quantité Orientation             Débit          Longueur              Coupe               Position / Lot
+   1        H/6                2.036,0            2.036,0           135° / 135°           Ext 008
+   1        H/6                2.036,0            2.036,0           135° / 135°           Int 008
+
+
+
+ 1x
+
+
+
+   1        B/3                  963,5                963,5          135° / 90°           Ext 003b
+   1        B/4                  963,5                963,5          90° / 135°           Ext 003
+   1        H/5                  963,5                963,5          135° / 90°           Ext 003
+   1        B/5                  963,5                963,5          90° / 135°           Int 006
+   1        B/3                  963,5                963,5          135° / 90°           Int 006
+   1        H/8                  963,5                963,5          90° / 135°           Int 005
+
+
+
+ 1x
+
+
+
+   1        H/6                  963,5                963,5          135° / 90°           Int 005
+   1        B/3                  963,5                963,5          135° / 90°           Int 005
+   1        B/5                  963,5                963,5          90° / 135°           Int 005
+   1        B/4                  963,5                963,5          135° / 90°           Int 004b
+   1        B/5                  963,5                963,5          90° / 135°           Int 004
+   1        H/6                  963,5                963,5          90° / 135°           Int 003b
+
+
+
+
+ 1x
+
+
+
+
+   1        D/2                  330,0                330,0          90° / 135°           Ext 010b
+   1        B/5                  482,0                482,0          90° / 135°           Ext 012
+   1        B/3                  482,0                482,0          135° / 90°           Ext 012
+   1        B/3                  482,0                482,0          135° / 90°           Ext 011
+   1        H/8                  482,0                482,0          90° / 135°           Ext 011
+   1        B/5                  482,0                482,0          90° / 135°           Ext 011
+   1        B/5                  963,5                963,5          90° / 135°           Ext 006
+   1        B/3                  963,5                963,5          135° / 90°           Ext 006
+   1        H/8                  963,5                963,5          90° / 135°           Ext 005
+
+
+
+
+                  forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                        Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto         Page: 16
+

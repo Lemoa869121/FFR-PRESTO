@@ -1,0 +1,60 @@
+  Bon d'atelier                                                     Date:
+                                                                    Affaire:
+                                                                                               11/11/2026 / 14:25
+                                                                                               FFR Presto
+
+Suite de la position Int 008
+Croquis    Quantité Numéro                  Description                            Longueur [mm]  Coupe     Orientation / N° courant
+           1 (1) Pce 32.805                 Forster PRESTO                              2.120,0 135° - 135°       G / 13
+
+
+
+
+            1 (1) Pce 32.855                Forster PRESTO                                  993,0      45° - 45°         B / 14
+
+
+
+
+            1 (1) Pce 32.805                Forster PRESTO                                  993,0 135° - 135°            H / 15
+
+parcloses
+Croquis   Quantité Numéro                   Description                            Longueur [mm]        Coupe        Orientation / N° courant
+          2 (2) Pce 901335                  Parclose aluminium                          1.940,0        90° - 90°             D
+
+            2 (2) Pce 901335                Parclose aluminium                            1.940,0      90° - 90°             G
+
+            2 (2) Pce 901335                Parclose aluminium                              853,0      90° - 90°             B
+
+            2 (2) Pce 901335                Parclose aluminium                              853,0      90° - 90°             H
+
+Vitrage
+    Quantité       Largeur         Hauteur          Surface Description                                                   Numéro
+                     [mm]            [mm]              [m²]
+   2 (2) Pce           837           1.964             1,64 Sans vitrage, 9 mm                                                   1
+Ferrure
+Croquis    Quantité Numéro                  Description                                     Teinte                   N° courant
+           6 (6) pce 907662                 paumelle à souder
+
+            1 (1) pce FFR019FND             Kit n°1, 2 béquille + carré de 8 +
+                                            rosaces
+            1 (1) pce FFR042FND             Serrure 1 point Pdt et 1/2 tour TP de
+                                            22mm
+            1 (1) pce FFR045FND             Serrure 2 points à levier
+            1 (1) pce FFR046FND             Gâche
+            1 (1) pce FFR049FND             Kit tringles M 8 Lg 1000mm et Lg
+                                            1500mm + 2 embouts+ 1 gâche
+            1 (1) pce FFR050FND             Gâche au sol avec obturateur
+Joints
+Croquis      Quantité Numéro                Description                                              Teinte
+          10,78 (10,78) m 905306            joint EPDM
+
+          11,34 (11,34) m 905312            joint pour vitrage à sec adhesif
+
+          11,34 (11,34) m 905317            joint étanchéité vitrage à sec intérieur
+
+
+
+
+                      forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                            Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto           Page: 40
+

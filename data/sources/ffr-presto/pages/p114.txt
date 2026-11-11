@@ -1,0 +1,63 @@
+   Bon d'atelier                                                   Date:
+                                                                   Affaire:
+                                                                                              11/11/2026 / 14:25
+                                                                                              FFR Presto
+
+Suite de la position Ext 009
+Croquis    Quantité Numéro                 Description                            Longueur [mm]        Coupe       Orientation / N° courant
+           1 (1) Pce 32.805                Forster PRESTO                              2.190,0        45° - 90°          Ha / 7
+
+                Max/Dim.: 2.190,0 mm
+ Longueur après délardage: 2.170,0 mm
+
+
+Joints
+Croquis      Quantité Numéro               Description                                              Teinte
+          6,59 (6,59) m 905306             joint EPDM
+
+Accessoires
+Croquis   Quantité Numéro                  Description                                              Teinte
+          2 (2) pce 900100                 douilles d'écoulement
+
+
+1: Porte à 2 vantaux extérieurs : - Sens d'ouverture DIN L - Hauteur poignée: 1.050 mm du sol fini
+Raccord au sol:                        Plinthe d'onglet 1060.2
+Jeu de porte (sol fini-dessous         Porte: 10 mm
+plinthe):
+Vantail:     1.1                      Poids:       62,8 kg               Taille:     993 x 2.120 mm
+             1.2                                   62,8 kg                           993 x 2.120 mm
+Profilés
+Croquis    Quantité Numéro             Description                  Longueur [mm]   Coupe      Orientation / N° courant
+           1 (1) Pce 32.803            Forster PRESTO                     2.120,0 45° - 45°            D/8
+
+
+
+
+            1 (1) Pce 32.803               Forster PRESTO                                2.120,0      45° - 45°           G/9
+
+
+
+
+            1 (1) Pce 32.855               Forster PRESTO                                  993,0      45° - 45°          B / 10
+
+
+
+
+            1 (1) Pce 32.803               Forster PRESTO                                  993,0      45° - 45°          H / 11
+
+            1 (1) Pce 32.803               Forster PRESTO                                2.120,0      45° - 45°          D / 12
+
+
+
+
+            1 (1) Pce 32.805               Forster PRESTO                                2.120,0 135° - 135°             G / 13
+
+                Max/Dim.: 2.120,0 mm
+ Longueur après délardage: 2.086,0 mm
+
+
+
+
+                     forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                           Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto          Page: 114
+

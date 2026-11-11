@@ -1,0 +1,58 @@
+  Bon d'atelier                                                     Date:
+                                                                    Affaire:
+                                                                                               11/11/2026 / 14:25
+                                                                                               FFR Presto
+
+Suite de la position Int 006
+Croquis    Quantité Numéro                  Description                            Longueur [mm]       Coupe        Orientation / N° courant
+           1 (1) Pce 32.803                 Forster PRESTO                              2.190,0       135° - 90°          Ha / 9
+
+            1 (1) Pce 32.852                Forster PRESTO                                  280,0      90° - 90°         Ha / 10
+
+            1 (1) Pce 32.852                Forster PRESTO                                  913,5      90° - 90°         La / 11
+
+            1 (1) Pce 32.803                Forster PRESTO                                1.113,0 135° - 135°            La / 12
+
+            1 (1) Pce 32.852                Forster PRESTO                                  913,5      90° - 90°         La / 13
+
+Joints
+Croquis      Quantité Numéro                Description                                              Teinte
+          5,66 (5,66) m 905306              joint EPDM
+
+Accessoires
+Croquis   Quantité Numéro                   Description                                              Teinte
+        15 (15) pce 900100                  douilles d'écoulement
+
+
+1,3: Volume fixeVitré de l'intérieur (Données par champ, 2 Totalité des champs)
+Poids:                42,4 kg
+parcloses
+Croquis    Quantité Numéro             Description                  Longueur [mm]                       Coupe         Orientation / N° courant
+         1 (1*2) Pce 901335            Parclose aluminium                 2.030,0                      90° - 90°              D
+
+          1 (1*2) Pce 901335                Parclose aluminium                            2.030,0      90° - 90°              G
+
+          1 (1*2) Pce 901335                Parclose aluminium                              913,5      90° - 90°              B
+
+          1 (1*2) Pce 901335                Parclose aluminium                              913,5      90° - 90°              H
+
+Vitrage
+    Quantité       Largeur         Hauteur          Surface Description                                                    Numéro
+                     [mm]            [mm]              [m²]
+ 1 (1*2) Pce           898           2.054             1,84 Sans vitrage, 9 mm                                                    1
+Joints
+Croquis     Quantité Numéro                 Description                                              Teinte
+         5,98 (5,98*2) m 905312             joint pour vitrage à sec adhesif
+
+          5,98 (5,98*2) m 905317            joint étanchéité vitrage à sec intérieur
+
+Accessoires
+Croquis   Quantité Numéro                   Description                                              Teinte
+        24 (24*2) pce 906579                boutons autotaraudeurs
+
+
+
+
+                      forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                            Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto            Page: 31
+

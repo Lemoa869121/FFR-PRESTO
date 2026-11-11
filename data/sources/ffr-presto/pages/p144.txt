@@ -1,0 +1,66 @@
+  Débit optimisé                                                 Date:
+                                                                 Affaire:
+                                                                                            11/11/2026 / 14:25
+                                                                                            FFR Presto
+
+                       forster 32.800                       Forster PRESTO, Acier brut
+                                                            Trait. surface:
+                       20 Pce á 6.000 mm                    Largeur: 50,0 mm / Hauteur: 70,0
+                                                            Chutes: 25.688 mm = 21,4 % (y compris les chutes
+                                                            restantes)
+       Chutes utilisables: 600 mm           Epaisseur lame de scie: 4 mm                              Chutes d'extr.: 60 mm
+Quantité Orientation              Débit          Longueur               Coupe              Position / Lot
+
+ 1x
+
+   1        H/4                 1.073,0             1.073,0          135° / 135°           Int 001
+   1        D/1                 2.170,0             2.170,0           90° / 135°           Int 001
+   1        G/2                 2.170,0             2.170,0           135° / 90°           Int 001
+
+ 1x
+
+   1        H/6                 1.073,0             1.073,0          135° / 135°           Int 003
+   1        G/4                 2.170,0             2.170,0           135° / 90°           Int 002
+   1        D/1                 2.170,0             2.170,0           90° / 135°           Int 002
+
+ 1x
+
+   1        H/5                 1.073,0             1.073,0          135° / 135°           Int 003b
+   1        D/1                 2.170,0             2.170,0           90° / 135°           Int 003b
+   1        G/2                 2.170,0             2.170,0           135° / 90°           Int 003
+
+ 1x
+
+   1        H/7                 1.073,0             1.073,0          135° / 135°           Int 005
+   1        D/1                 2.170,0             2.170,0           90° / 135°           Int 004b
+   1        G/3                 2.170,0             2.170,0           135° / 90°           Int 004
+
+ 1x
+
+   1        H/4                 1.073,0             1.073,0          135° / 135°           Ext 001
+   1        G/2                 2.170,0             2.170,0           135° / 90°           Int 007
+   1        D/1                 2.170,0             2.170,0           90° / 135°           Int 007
+
+ 1x
+
+   1        H/6                 1.073,0             1.073,0          135° / 135°           Ext 003
+   1        G/4                 2.170,0             2.170,0           135° / 90°           Int 008
+   1        D/1                 2.170,0             2.170,0           90° / 135°           Int 008
+
+ 1x
+
+   1        H/5                 1.073,0             1.073,0          135° / 135°           Ext 003b
+   1        D/1                 2.170,0             2.170,0           90° / 135°           Int 009b
+   1        G/2                 2.170,0             2.170,0           135° / 90°           Int 009
+
+ 1x
+
+   1        H/7                 1.073,0             1.073,0          135° / 135°           Ext 005
+   1        D/1                 2.170,0             2.170,0           90° / 135°           Int 010b
+   1        G/3                 2.170,0             2.170,0           135° / 90°           Int 010
+
+
+
+                   forsterpro I Forster Systèmes de profilés SAS I FR-77127 Lieusaint I www.forstersystems.com
+                         Document édité par : Antoine DUVEY le 11/11/2026 sous la référence : FFR Presto            Page: 2
+
