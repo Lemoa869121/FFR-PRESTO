@@ -15,7 +15,8 @@ const URL = `http://localhost:${PORT}${BASE}`;
 const SHOTS = 'smoke-screenshots';
 mkdirSync(SHOTS, { recursive: true });
 
-const server = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort'], { stdio: 'inherit', shell: process.platform === 'win32' });
+// Run the Vite CLI directly (not through npx) so that stopping it really ends the process.
+const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--port', String(PORT), '--strictPort'], { stdio: 'inherit' });
 const stop = () => server.kill('SIGTERM');
 
 async function waitForServer() {
@@ -136,4 +137,6 @@ try {
 } finally {
   await browser?.close();
   stop();
+  // Make sure no handle keeps the process alive in CI.
+  setTimeout(() => process.exit(process.exitCode ?? 0), 500);
 }

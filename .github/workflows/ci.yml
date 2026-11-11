@@ -28,6 +28,7 @@ jobs:
       - name: Production build (type-check + Vite)
         run: npm run build
       - name: Browser smoke test (vite preview + Chromium)
+        timeout-minutes: 8
         run: |
           npx playwright install --with-deps chromium
           npm run smoke
